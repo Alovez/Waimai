@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
@@ -6,10 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
     <meta name="description" content="">
-    <meta name="author" content="A">
+    <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>点餐|注册</title>
+    <title>登录</title>
 
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -18,7 +19,7 @@
     <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="signin.css" rel="stylesheet">
+    <link href="./signin.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -35,18 +36,19 @@
 
     <div class="container">
 
-      <form class="form-signin" action="/online/regist" method="post">
+      <form class="form-signin" action="/login/" method="post">
         {% csrf_token %}
-        <h2 class="form-signin-heading">注册</h2>
+        <h2 class="form-signin-heading">登录</h2>
         <label for="inputUsername" class="sr-only">用户名</label>
-        <p>{{ unr }}</p>
         <input type="text" name="username" id="inputUsername" class="form-control" placeholder="用户名" required autofocus>
-        <label for="inputEmail" class="sr-only">邮箱</label>
-        <input type="email" name="email" id="inputEmail" class="form-control" placeholder="邮箱" required>
-        <label for="inputPassword" class="sr-only">密码</label>
+        <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" name="password" id="inputPassword" class="form-control" placeholder="密码" required>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
+        </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-        <p>{{ result }}</p>
       </form>
 
     </div> <!-- /container -->
