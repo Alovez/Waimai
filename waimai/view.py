@@ -20,10 +20,8 @@ def hello(request):
 def admin(request):
     request.encoding = 'utf-8'
     if 'q' in request.GET:
-        message = '你搜索的内容为: ' + request.GET['q']
-        items = get_menu_by_id(request.GET['q'])
+        get_menu_by_id(request.GET['q'])
         context = {}
-        context['shop1'] = items
         context['hello'] = 'Hello World!'
         return render(request, 'menu.html', context)
     else:
