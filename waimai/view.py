@@ -5,7 +5,7 @@ from django.shortcuts import render, render_to_response
 from django.http import HttpResponse,HttpResponseRedirect
 import time
 from django.contrib import auth
-from waimai.utils.get_menu import get_menu_by_id
+from waimai.utils.get_menu import get_menu_by_id, get_menu_from_db
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
@@ -15,6 +15,9 @@ def hello(request):
     context['hello'] = request.user.is_authenticated()
     context['is_login'] = request.user.is_authenticated()
     context['username'] = request.user.username
+    shop = get_menu_from_db(1)
+    context['shop1'] = shop
+    context['shop1_name'] = shop[0][2]
     return render(request, 'menu.html', context)
 
 def admin(request):
@@ -56,6 +59,10 @@ def login(req):
         if newUser is not None:
             auth.login(req, newUser)
             return HttpResponseRedirect("/menu")
+        else:
+            context = {}
+            context['login_result'] = '用户名或密码错误'
+            return render(req, 'login.html', context)
     else:
         return render(req, 'login.html')
 

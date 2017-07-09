@@ -72,10 +72,10 @@
       </div>
       <div class="row">
         <div class="col-sm-4">
-          <h1>第一家店</h1>
+          <h1>{{  shop1_name }}</h1>
           <div class="list-group">
             {% for item in shop1 %}
-                <a href="#" class="list-group-item">{{ item }}</a>
+                <a href="#" class="list-group-item">{{ item.1 }}</a>
             {% endfor %}
           </div>
         </div><!-- /.col-sm-4 -->

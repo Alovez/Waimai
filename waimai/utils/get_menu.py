@@ -44,3 +44,12 @@ def get_menu_by_id(id):
 
     #     n_pos = item.text.find('\n')
     #     name_list.append(item.text[:n_pos])
+
+def get_menu_from_db(shop_num):
+    conn = sqlite3.connect('menu_list.db')
+    cursor = conn.execute('select ID,NAME,SHOP FROM today_table')
+    result = []
+    for row in cursor:
+        result.append(row)
+    conn.close()
+    return result
