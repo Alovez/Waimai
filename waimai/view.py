@@ -6,13 +6,19 @@ from django.http import HttpResponse,HttpResponseRedirect
 import time
 from django.contrib import auth
 from waimai.utils.get_menu import get_menu_by_id, get_menu_from_db
+from waimai.utils.get_order import add_cart, get_cart
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
+from waimai.constants import WeekDay
 
 @login_required()
 def hello(request):
+    if 'dish' in request.GET:
+        dish = request.GET['dish']
+        add_cart(request.user.username, dish)
     context = {}
-    context['hello'] = request.user.is_authenticated()
+    context['hello'] = WeekDay[datetime.today().weekday()]
     context['is_login'] = request.user.is_authenticated()
     context['username'] = request.user.username
     shop = get_menu_from_db(1)
@@ -69,3 +75,10 @@ def login(req):
 def logout(req):
     auth.logout(req)
     return HttpResponseRedirect("/menu")
+
+@login_required()
+def cart(req):
+    dishes = get_cart(req.user.username)
+    context = {}
+    context['dishes'] = dishes
+    return render(req, 'cart.html', context)

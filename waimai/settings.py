@@ -25,7 +25,7 @@ SECRET_KEY = '+0hqht43j7br=x$%cmfs+a$+&wfoks$#ix6_l3_j&k2=#uu$5f'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.15', 'geekover.xicp.net']
+ALLOWED_HOSTS = ['192.168.1.3', 'geekover.xicp.net']
 
 
 # Application definition
