@@ -18,7 +18,7 @@
     <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="signin.css" rel="stylesheet">
+    <link href="/statics/css/signin.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -45,7 +45,9 @@
         <input type="email" name="email" id="inputEmail" class="form-control" placeholder="邮箱" required>
         <label for="inputPassword" class="sr-only">密码</label>
         <input type="password" name="password" id="inputPassword" class="form-control" placeholder="密码" required>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+         <label for="inputPassword_re" class="sr-only">重复密码</label>
+        <input type="password" name="password_re" id="inputPassword_re" class="form-control" placeholder="重复密码" required>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">注册</button>
         <p>{{ result }}</p>
       </form>
 

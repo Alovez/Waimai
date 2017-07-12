@@ -4,7 +4,7 @@ import selenium
 import time
 import sqlite3
 
-def get_menu_by_id(id):
+def get_menu_by_id(shop_num,id):
     driver = webdriver.Chrome('D:\\UserApp\\chromedriver\\chromedriver.exe')
     time.sleep(2)
     driver.get('http://waimai.baidu.com/waimai/shop/' + id) #1430724018
@@ -16,25 +16,25 @@ def get_menu_by_id(id):
     conn = sqlite3.connect('menu_list.db')
     cursor = conn.execute("select name from sqlite_master where type='table' order by name;")
     for row in cursor:
-        if row[0] == "today_table":
+        if row[0] == "today_table_" + shop_num:
             is_table = True
     if not is_table:
-        conn.execute('''CREATE TABLE today_table
+        conn.execute('''CREATE TABLE today_table_%s
        (ID INT PRIMARY KEY     NOT NULL,
        NAME           TEXT    NOT NULL,
        SHOP           TEXT     NOT NULL,
-       SHOP_ID        TEXT     NOT NULL);''')
+       SHOP_ID        TEXT     NOT NULL);''' % (shop_num))
         conn.commit()
     else:
-        conn.execute("DELETE FROM today_table")
+        conn.execute("DELETE FROM today_table_" + shop_num)
         # conn.execute("update sqlite_sequence SET seq = 0 where name ='today_table'")
         conn.commit()
     item_id = 0
     for item in menu_list:
         n_pos = item.text.find('\n')
         name = item.text[:n_pos]
-        conn.execute("INSERT INTO today_table (ID,NAME,SHOP,SHOP_ID) \
-                    VALUES (%s, '%s', '%s', '%s' )" % (item_id, name, shop_name, id))
+        conn.execute("INSERT INTO today_table_%s (ID,NAME,SHOP,SHOP_ID) \
+                    VALUES (%s, '%s', '%s', '%s' )" % (shop_num ,item_id, name, shop_name, id))
         item_id += 1
     conn.commit()
     conn.close()
@@ -47,7 +47,7 @@ def get_menu_by_id(id):
 
 def get_menu_from_db(shop_num):
     conn = sqlite3.connect('menu_list.db')
-    cursor = conn.execute('select ID,NAME,SHOP FROM today_table')
+    cursor = conn.execute('select ID,NAME,SHOP FROM today_table_' + shop_num)
     result = []
     for row in cursor:
         result.append(row)

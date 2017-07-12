@@ -21,26 +21,45 @@ def hello(request):
     context['hello'] = WeekDay[datetime.today().weekday()]
     context['is_login'] = request.user.is_authenticated()
     context['username'] = request.user.username
-    shop = get_menu_from_db(1)
-    context['shop1'] = shop
-    context['shop1_name'] = shop[0][2]
+    shop1 = get_menu_from_db(1)
+    shop2 = get_menu_from_db(2)
+    shop3 = get_menu_from_db(3)
+    context['shop1'] = shop1
+    context['shop2'] = shop2
+    context['shop3'] = shop3
+    context['shop1_name'] = shop1[0][2]
+    context['shop2_name'] = shop2[0][2]
+    context['shop3_name'] = shop3[0][2]
     return render(request, 'menu.html', context)
 
+@login_required()
 def admin(request):
+    if request.user.username != 'admin':
+        return HttpResponseRedirect('/menu')
     request.encoding = 'utf-8'
-    if 'q' in request.GET:
-        get_menu_by_id(request.GET['q'])
-        context = {}
-        context['hello'] = 'Hello World!'
-        return render(request, 'menu.html', context)
+    is_get = False
+    if 'shop1' in request.GET:
+        get_menu_by_id(1, request.GET['shop1'])
+        is_get = True
+    if 'shop2' in request.GET:
+        get_menu_by_id(2, request.GET['shop2'])
+        is_get = True
+    if 'shop3' in request.GET:
+        get_menu_by_id(3, request.GET['shop3'])
+        is_get = True
+    if is_get:
+        return HttpResponseRedirect('/menu')
     else:
         return render(request, 'admin.html')
 
 #注册
 def regist(req):
+    if req.user.is_authenticated():
+        return HttpResponseRedirect('/menu')
     if req.method == 'POST':
         username = req.POST['username']
         password = req.POST['password']
+        password_re = req.POST['password_re']
         email = req.POST['email']
         #添加到数据库
         filterResult = User.objects.filter(username=username)
@@ -48,6 +67,9 @@ def regist(req):
             result = {}
             result['unr'] = '用户名已存在！'
             return render(req, 'regist.html', context=result)
+        if password != password_re:
+            result = {'unr': '两次输入的密码不一致'}
+            return render(req, 'regist.html', result)
         user = User()
         user.username = username
         user.set_password(password)
@@ -58,6 +80,8 @@ def regist(req):
 
 #登陆
 def login(req):
+    if req.user.is_authenticated():
+        return HttpResponseRedirect('/menu')
     if req.method == 'POST':
         username = req.POST['username']
         password = req.POST['password']

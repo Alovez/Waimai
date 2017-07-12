@@ -44,25 +44,20 @@
           </button>
           <a class="navbar-brand" href="#">点单</a>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">下单</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
       </div>
     </nav>
 
     <div class="container">
         <div class="jumbotron">
-        <h1></h1>
-        <h1>{{ hello }}</h1>
        <form class="form-signin" action="/admin" method="get">
         <h2 class="form-signin-heading">输入饭店</h2>
-        <label for="inputEmail" class="sr-only">饭店id</label>
-        <input id="inputEmail" name="q" class="form-control" placeholder="饭店id" required autofocus>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <label for="shop_id1" class="sr-only">饭店1 ID</label>
+        <input id="shop_id1" name="shop1" class="form-control" placeholder="饭店1 ID" required autofocus>
+         <label for="shop_id2" class="sr-only">饭店2 ID</label>
+        <input id="shop_id2" name="shop2" class="form-control" placeholder="饭店2 ID" required>
+         <label for="shop_id3" class="sr-only">饭店3 ID</label>
+        <input id="shop_id3" name="shop3" class="form-control" placeholder="饭店2 ID" required>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">提交饭店ID</button>
       </form>
       </div>
     </div><!-- /.container -->
