@@ -77,30 +77,19 @@
           </div>
         </div><!-- /.col-sm-4 -->
         <div class="col-sm-4">
+          <h1>{{  shop2_name }}</h1>
           <div class="list-group">
-            <a href="#" class="list-group-item active">
-              Cras justo odio
-            </a>
-            <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
-            <a href="#" class="list-group-item">Morbi leo risus</a>
-            <a href="#" class="list-group-item">Porta ac consectetur ac</a>
-            <a href="#" class="list-group-item">Vestibulum at eros</a>
+            {% for item in shop2 %}
+                <a href="/menu?dish={{ item.1 }}" class="list-group-item">{{ item.1 }}</a>
+            {% endfor %}
           </div>
         </div><!-- /.col-sm-4 -->
         <div class="col-sm-4">
+          <h1>{{  shop3_name }}</h1>
           <div class="list-group">
-            <a href="#" class="list-group-item active">
-              <h4 class="list-group-item-heading">List group item heading</h4>
-              <p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-            </a>
-            <a href="#" class="list-group-item">
-              <h4 class="list-group-item-heading">List group item heading</h4>
-              <p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-            </a>
-            <a href="#" class="list-group-item">
-              <h4 class="list-group-item-heading">List group item heading</h4>
-              <p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-            </a>
+            {% for item in shop3 %}
+                <a href="/menu?dish={{ item.1 }}" class="list-group-item">{{ item.1 }}</a>
+            {% endfor %}
           </div>
         </div><!-- /.col-sm-4 -->
       </div>
