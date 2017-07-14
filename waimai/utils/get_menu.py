@@ -4,10 +4,11 @@ import selenium
 import time
 import sqlite3
 
-def get_menu_by_id(shop_num,id):
+def get_menu_by_id(shop_num,id,is_mobile=False):
     driver = webdriver.Chrome('D:\\UserApp\\chromedriver\\chromedriver.exe')
     time.sleep(2)
     driver.get('http://waimai.baidu.com/waimai/shop/' + id) #1430724018
+    # driver.get('http://waimai.baidu.com/mobile/waimai?qt=shopmenu&is_attr=1&shop_id=%s&address=龙冠商务中心-银座&lat=4850537.27&lng=12951506' % id)
     time.sleep(5)
     menu_list = driver.find_elements_by_css_selector('li.list-item')
     shop_name_element = driver.find_element_by_css_selector('section.breadcrumb>span')
@@ -16,7 +17,7 @@ def get_menu_by_id(shop_num,id):
     conn = sqlite3.connect('menu_list.db')
     cursor = conn.execute("select name from sqlite_master where type='table' order by name;")
     for row in cursor:
-        if row[0] == "today_table_" + shop_num:
+        if row[0] == "today_table_%s"%shop_num:
             is_table = True
     if not is_table:
         conn.execute('''CREATE TABLE today_table_%s
@@ -26,7 +27,7 @@ def get_menu_by_id(shop_num,id):
        SHOP_ID        TEXT     NOT NULL);''' % (shop_num))
         conn.commit()
     else:
-        conn.execute("DELETE FROM today_table_" + shop_num)
+        conn.execute("DELETE FROM today_table_%s"%shop_num)
         # conn.execute("update sqlite_sequence SET seq = 0 where name ='today_table'")
         conn.commit()
     item_id = 0
@@ -47,7 +48,7 @@ def get_menu_by_id(shop_num,id):
 
 def get_menu_from_db(shop_num):
     conn = sqlite3.connect('menu_list.db')
-    cursor = conn.execute('select ID,NAME,SHOP FROM today_table_' + shop_num)
+    cursor = conn.execute('select ID,NAME,SHOP FROM today_table_%s'%shop_num)
     result = []
     for row in cursor:
         result.append(row)

@@ -106,3 +106,13 @@ def cart(req):
     context = {}
     context['dishes'] = dishes
     return render(req, 'cart.html', context)
+
+@login_required()
+def summary(request):
+    if request.user.username != 'admin':
+        return HttpResponseRedirect('/menu')
+    context = {}
+    context['is_login'] = request.user.is_authenticated()
+    context['username'] = request.user.username
+
+    return render(request, 'summary.html', context)
