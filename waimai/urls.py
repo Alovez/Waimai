@@ -30,3 +30,9 @@ urlpatterns = [
     url(r'^cart/$', view.cart),
     url(r'^summary/$',view.summary)
 ]
+
+# TODO: 添加修改用户密码页面
+# TODO: 完成点餐统计页面
+# TODO: 添加邮箱重置密码页面
+# TODO: 添加从手机页面抓取的功能
+# TODO: 尝试自动下单
