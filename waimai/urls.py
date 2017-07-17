@@ -23,7 +23,6 @@ urlpatterns = [
     url(r'^$', view.hello),
     url(r'menu', view.hello),
     url(r'admin', view.admin),
-    url(r'^online/', include('online.urls')),
     url(r'^login/$', view.login),
     url(r'^regist/$', view.regist),
     url(r'^logout/$', view.logout),

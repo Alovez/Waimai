@@ -50,7 +50,7 @@
           <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">欢迎您，{{ username }}<span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <li><a href="/cart">饭店管理</a></li>
+                  <li><a href="/admin">饭店管理</a></li>
                   <li role="separator" class="divider"></li>
                   <li><a href="/logout">登出</a></li>
                 </ul>
@@ -72,7 +72,7 @@
           <h1>{{  shop1_name }}</h1>
           <div class="list-group">
             {% for item in shop1 %}
-                <a href="/menu?dish={{ item.1 }}" class="list-group-item">{{ item.1 }}</a>
+                <a href="#" class="list-group-item">{{ item.0 }}<p>数量： {{ item.1 }}</p></a>
             {% endfor %}
           </div>
         </div><!-- /.col-sm-4 -->
@@ -80,7 +80,7 @@
           <h1>{{  shop2_name }}</h1>
           <div class="list-group">
             {% for item in shop2 %}
-                <a href="/menu?dish={{ item.1 }}" class="list-group-item">{{ item.1 }}</a>
+               <a href="#" class="list-group-item">{{ item.0 }}<p>数量： {{ item.1 }}</p></a>
             {% endfor %}
           </div>
         </div><!-- /.col-sm-4 -->
@@ -88,7 +88,7 @@
           <h1>{{  shop3_name }}</h1>
           <div class="list-group">
             {% for item in shop3 %}
-                <a href="/menu?dish={{ item.1 }}" class="list-group-item">{{ item.1 }}</a>
+              <a href="#" class="list-group-item">{{ item.0 }}<p>数量： {{ item.1 }}</p></a>
             {% endfor %}
           </div>
         </div><!-- /.col-sm-4 -->

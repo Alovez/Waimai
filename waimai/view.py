@@ -6,7 +6,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 import time
 from django.contrib import auth
 from waimai.utils.get_menu import get_menu_by_id, get_menu_from_db
-from waimai.utils.get_order import add_cart, get_cart
+from waimai.utils.get_order import add_cart, get_cart, get_order, remove_order
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
@@ -16,7 +16,8 @@ from waimai.constants import WeekDay
 def hello(request):
     if 'dish' in request.GET:
         dish = request.GET['dish']
-        add_cart(request.user.username, dish)
+        shop_id = request.GET['shop']
+        add_cart(request.user.username, dish, shop_id)
     context = {}
     context['hello'] = WeekDay[datetime.today().weekday()]
     context['is_login'] = request.user.is_authenticated()
@@ -102,6 +103,8 @@ def logout(req):
 
 @login_required()
 def cart(req):
+    if 'dish' in req.GET:
+        remove_order(req.user.username, req.GET['dish'], req.GET['shop'])
     dishes = get_cart(req.user.username)
     context = {}
     context['dishes'] = dishes
@@ -114,5 +117,15 @@ def summary(request):
     context = {}
     context['is_login'] = request.user.is_authenticated()
     context['username'] = request.user.username
-
+    context['hello'] = '今天的点单如下'
+    shop1 = get_order(1)
+    context['shop1'] = shop1
+    print(shop1)
+    context['shop1_name'] = 'test'
+    context['shop2_name'] = 'test'
+    context['shop3_name'] = 'test'
+    shop2 = get_order(2)
+    context['shop2'] = shop2
+    shop3 = get_order(3)
+    context['shop3'] = shop3
     return render(request, 'summary.html', context)

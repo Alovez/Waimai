@@ -77,7 +77,8 @@
   <tbody>
   {% for dish in dishes %}
     <tr>
-      <td>{{ dish }}</td>
+      <td>{{ dish.0 }}</td>
+      <td><a class="btn btn-primary" href="/cart?dish={{ dish.0 }}&shop={{ dish.1 }}">删除</a></td>
     </tr>
   {% endfor %}
   </tbody>

@@ -72,7 +72,7 @@
           <h1>{{  shop1_name }}</h1>
           <div class="list-group">
             {% for item in shop1 %}
-                <a href="/menu?dish={{ item.1 }}" class="list-group-item">{{ item.1 }}</a>
+                <a href="/menu?dish={{ item.1 }}&shop=1" class="list-group-item">{{ item.1 }}</a>
             {% endfor %}
           </div>
         </div><!-- /.col-sm-4 -->
@@ -80,7 +80,7 @@
           <h1>{{  shop2_name }}</h1>
           <div class="list-group">
             {% for item in shop2 %}
-                <a href="/menu?dish={{ item.1 }}" class="list-group-item">{{ item.1 }}</a>
+                <a href="/menu?dish={{ item.1 }}&shop=2" class="list-group-item">{{ item.1 }}</a>
             {% endfor %}
           </div>
         </div><!-- /.col-sm-4 -->
@@ -88,7 +88,7 @@
           <h1>{{  shop3_name }}</h1>
           <div class="list-group">
             {% for item in shop3 %}
-                <a href="/menu?dish={{ item.1 }}" class="list-group-item">{{ item.1 }}</a>
+                <a href="/menu?dish={{ item.1 }}&shop=3" class="list-group-item">{{ item.1 }}</a>
             {% endfor %}
           </div>
         </div><!-- /.col-sm-4 -->
