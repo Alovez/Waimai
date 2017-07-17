@@ -40,7 +40,8 @@ def get_today_date():
 
 def get_order(shop_id):
     conn = sqlite3.connect('order_info')
-    cursor = conn.execute("select DISH from order_list where SHOP='%s'" % (shop_id))
+    cursor = conn.execute("select DISH from order_list "
+                          "where SHOP='%s' and TIME='%s'" % (shop_id, get_today_date()))
     dishes = {}
     for item in cursor:
         if item[0] in dishes.keys():

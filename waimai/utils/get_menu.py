@@ -7,12 +7,16 @@ import sqlite3
 def get_menu_by_id(shop_num,id,is_mobile=False):
     driver = webdriver.Chrome('D:\\UserApp\\chromedriver\\chromedriver.exe')
     time.sleep(2)
-    driver.get('http://waimai.baidu.com/waimai/shop/' + id) #1430724018
-    # driver.get('http://waimai.baidu.com/mobile/waimai?qt=shopmenu&is_attr=1&shop_id=%s&address=龙冠商务中心-银座&lat=4850537.27&lng=12951506' % id)
-    time.sleep(5)
-    menu_list = driver.find_elements_by_css_selector('li.list-item')
-    shop_name_element = driver.find_element_by_css_selector('section.breadcrumb>span')
-    shop_name = shop_name_element.text
+    if is_mobile:
+        driver.get('http://waimai.baidu.com/mobile/waimai?qt=shopmenu&is_attr=1&shop_id=%s&address=龙冠商务中心-银座&lat=4850537.27&lng=12951506' % id)
+        menu_list = driver.find_elements_by_css_selector('li.list-item.item-img')
+        shop_name_element = driver.find_element_by_css_selector('div.top-div>div.center-title')
+        shop_name = shop_name_element.text
+    else:
+        driver.get('http://waimai.baidu.com/waimai/shop/' + id) #1430724018
+        menu_list = driver.find_elements_by_css_selector('li.list-item')
+        shop_name_element = driver.find_element_by_css_selector('section.breadcrumb>span')
+        shop_name = shop_name_element.text
     is_table = False
     conn = sqlite3.connect('menu_list.db')
     cursor = conn.execute("select name from sqlite_master where type='table' order by name;")
@@ -52,5 +56,14 @@ def get_menu_from_db(shop_num):
     result = []
     for row in cursor:
         result.append(row)
+    conn.close()
+    return result
+
+def get_shop(shop_id):
+    conn = sqlite3.connect('menu_list.db')
+    cursor = conn.execute("select SHOP from today_table_%s limit 1" % shop_id)
+    result = ''
+    for item in cursor:
+        result = item[0]
     conn.close()
     return result

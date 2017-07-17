@@ -5,7 +5,7 @@ from django.shortcuts import render, render_to_response
 from django.http import HttpResponse,HttpResponseRedirect
 import time
 from django.contrib import auth
-from waimai.utils.get_menu import get_menu_by_id, get_menu_from_db
+from waimai.utils.get_menu import get_menu_by_id, get_menu_from_db, get_shop
 from waimai.utils.get_order import add_cart, get_cart, get_order, remove_order
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -14,14 +14,15 @@ from waimai.constants import WeekDay
 
 @login_required()
 def hello(request):
-    if 'dish' in request.GET:
+    context = {}
+    if 'dish' in request.GET and request.user.username != 'admin':
         dish = request.GET['dish']
         shop_id = request.GET['shop']
         add_cart(request.user.username, dish, shop_id)
-    context = {}
+        context['dish'] = dish
     context['hello'] = WeekDay[datetime.today().weekday()]
-    context['is_login'] = request.user.is_authenticated()
     context['username'] = request.user.username
+    context['is_admin'] = (request.user.username == 'admin')
     shop1 = get_menu_from_db(1)
     shop2 = get_menu_from_db(2)
     shop3 = get_menu_from_db(3)
@@ -39,19 +40,19 @@ def admin(request):
         return HttpResponseRedirect('/menu')
     request.encoding = 'utf-8'
     is_get = False
-    if 'shop1' in request.GET:
-        get_menu_by_id(1, request.GET['shop1'])
-        is_get = True
-    if 'shop2' in request.GET:
-        get_menu_by_id(2, request.GET['shop2'])
-        is_get = True
-    if 'shop3' in request.GET:
-        get_menu_by_id(3, request.GET['shop3'])
-        is_get = True
+    for i in range(1, 4):
+        if 'shop%s' % i in request.GET:
+            if 'is_%s_mobile' % i in request.GET and request.GET['is_%s_mobile' % i] == 'on':
+                get_menu_by_id(i, request.GET['shop%s' % i], is_mobile=True)
+            else:
+                get_menu_by_id(i, request.GET['shop%s' % i])
+            is_get = True
     if is_get:
         return HttpResponseRedirect('/menu')
     else:
-        return render(request, 'admin.html')
+        context = {}
+        context['username'] = request.user.username
+        return render(request, 'admin.html', context)
 
 #注册
 def regist(req):
@@ -89,6 +90,8 @@ def login(req):
         newUser = auth.authenticate(username=username, password=password)
         if newUser is not None:
             auth.login(req, newUser)
+            if username == 'admin':
+                return HttpResponseRedirect("/admin")
             return HttpResponseRedirect("/menu")
         else:
             context = {}
@@ -121,9 +124,9 @@ def summary(request):
     shop1 = get_order(1)
     context['shop1'] = shop1
     print(shop1)
-    context['shop1_name'] = 'test'
-    context['shop2_name'] = 'test'
-    context['shop3_name'] = 'test'
+    context['shop1_name'] = get_shop(1)
+    context['shop2_name'] = get_shop(2)
+    context['shop3_name'] = get_shop(3)
     shop2 = get_order(2)
     context['shop2'] = shop2
     shop3 = get_order(3)

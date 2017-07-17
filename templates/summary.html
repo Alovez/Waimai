@@ -14,15 +14,8 @@
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
-
     <!-- Custom styles for this template -->
     <link href="/statics/css/common.css" rel="stylesheet">
-
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -45,18 +38,17 @@
           <a class="navbar-brand" href="/menu">点单</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
-          {% if is_login %}
           <ul class="nav navbar-nav navbar-right">
           <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">欢迎您，{{ username }}<span class="caret"></span></a>
                 <ul class="dropdown-menu">
                   <li><a href="/admin">饭店管理</a></li>
+                  <li><a href="/summary">点单统计</a></li>
                   <li role="separator" class="divider"></li>
                   <li><a href="/logout">登出</a></li>
                 </ul>
               </li>
              </ul>
-          {% endif %}
         </div><!--/.nav-collapse -->
       </div>
     </nav>
@@ -65,7 +57,7 @@
         <div class="jumbotron">
         <h1></h1>
         <h1>{{ hello }}</h1>
-        <p>This is a template showcasing the optional theme stylesheet included in Bootstrap. Use it as a starting point to create something more unique by building on or modifying it.</p>
+        <!--<p>This is a template showcasing the optional theme stylesheet included in Bootstrap. Use it as a starting point to create something more unique by building on or modifying it.</p>-->
       </div>
       <div class="row">
         <div class="col-sm-4">
@@ -103,7 +95,5 @@
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
   </body>
 </html>

@@ -14,15 +14,8 @@
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
-
     <!-- Custom styles for this template -->
     <link href="/statics/css/common.css" rel="stylesheet">
-
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -44,6 +37,19 @@
           </button>
           <a class="navbar-brand" href="#">点单</a>
         </div>
+           <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">欢迎您，{{ username }}<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/admin">饭店管理</a></li>
+                  <li><a href="/summary">点单统计</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="/logout">登出</a></li>
+                </ul>
+              </li>
+             </ul>
+        </div><!--/.nav-collapse -->
       </div>
     </nav>
 
@@ -53,10 +59,13 @@
         <h2 class="form-signin-heading">输入饭店</h2>
         <label for="shop_id1" class="sr-only">饭店1 ID</label>
         <input id="shop_id1" name="shop1" class="form-control" placeholder="饭店1 ID" required autofocus>
+           <input type="checkbox" name="is_1_mobile">如果该店需要手机查看菜单请勾选
          <label for="shop_id2" class="sr-only">饭店2 ID</label>
         <input id="shop_id2" name="shop2" class="form-control" placeholder="饭店2 ID" required>
+           <input type="checkbox" name="is_2_mobile">如果该店需要手机查看菜单请勾选
          <label for="shop_id3" class="sr-only">饭店3 ID</label>
         <input id="shop_id3" name="shop3" class="form-control" placeholder="饭店2 ID" required>
+           <input type="checkbox" name="is_3_mobile">如果该店需要手机查看菜单请勾选
         <button class="btn btn-lg btn-primary btn-block" type="submit">提交饭店ID</button>
       </form>
       </div>
@@ -69,7 +78,5 @@
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
   </body>
 </html>
