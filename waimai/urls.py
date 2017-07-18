@@ -27,7 +27,8 @@ urlpatterns = [
     url(r'^regist/$', view.regist),
     url(r'^logout/$', view.logout),
     url(r'^cart/$', view.cart),
-    url(r'^summary/$',view.summary)
+    url(r'^summary/$',view.summary),
+    url(r'^reset/$', view.reset)
 ]
 
 # TODO: 添加修改用户密码页面

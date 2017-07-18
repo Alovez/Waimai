@@ -132,3 +132,20 @@ def summary(request):
     shop3 = get_order(3)
     context['shop3'] = shop3
     return render(request, 'summary.html', context)
+
+@login_required()
+def reset(request):
+    if request.user.username == 'admin':
+        if 'c_user' in request.GET:
+            C_User = User.objects.get(username=request.GET['c_user'])
+            C_User.set_password('Digibird2009')
+            C_User.save()
+            context = {'c_user': request.GET['c_user']}
+            context['username'] = request.user.username
+            return render(request, 'reset.html', context)
+        else:
+            context = {}
+            context['username'] = request.user.username
+            return render(request, 'reset.html', context)
+    else:
+        return HttpResponseRedirect('/menu')
