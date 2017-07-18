@@ -34,6 +34,7 @@ def hello(request):
     context['shop3_name'] = shop3[0][2]
     return render(request, 'menu.html', context)
 
+# bH1&5C
 @login_required()
 def admin(request):
     if request.user.username != 'admin':
@@ -100,6 +101,7 @@ def login(req):
     else:
         return render(req, 'login.html')
 
+@login_required()
 def change(req):
     context = {}
     if req.method == 'POST':
