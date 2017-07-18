@@ -117,7 +117,6 @@ def change(req):
             return render(req, 'change.html', context)
     return render(req, 'change.html')
 
-
 def logout(req):
     auth.logout(req)
     return HttpResponseRedirect("/menu")
