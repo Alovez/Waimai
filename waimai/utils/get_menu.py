@@ -17,6 +17,7 @@ def get_menu_by_id(shop_num,id,is_mobile=False):
         menu_list = driver.find_elements_by_css_selector('li.list-item')
         shop_name_element = driver.find_element_by_css_selector('section.breadcrumb>span')
         shop_name = shop_name_element.text
+    # TODO: 抓取图片
     is_table = False
     conn = sqlite3.connect('menu_list.db')
     cursor = conn.execute("select name from sqlite_master where type='table' order by name;")

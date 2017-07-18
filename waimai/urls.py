@@ -28,11 +28,9 @@ urlpatterns = [
     url(r'^logout/$', view.logout),
     url(r'^cart/$', view.cart),
     url(r'^summary/$',view.summary),
-    url(r'^reset/$', view.reset)
+    url(r'^reset/$', view.reset),
+    url(r'^change/$', view.change)
 ]
 
-# TODO: 添加修改用户密码页面
-# TODO: 完成点餐统计页面
-# TODO: 添加邮箱重置密码页面
 # TODO: 尝试自动下单
 # TODO: 增加最近三个点单及最热门点单

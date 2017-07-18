@@ -100,6 +100,22 @@ def login(req):
     else:
         return render(req, 'login.html')
 
+def change(req):
+    context = {}
+    if req.method == 'POST':
+        password = req.POST['password']
+        password_re = req.POST['password_re']
+        if password == password_re:
+            c_user =  req.user
+            c_user.set_password(password)
+            c_user.save()
+            return HttpResponseRedirect('/menu')
+        else:
+            context['change_result'] = '两次输入的密码不一致'
+            return render(req, 'change.html', context)
+    return render(req, 'change.html')
+
+
 def logout(req):
     auth.logout(req)
     return HttpResponseRedirect("/menu")
