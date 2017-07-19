@@ -92,7 +92,7 @@ def login(req):
         if newUser is not None:
             auth.login(req, newUser)
             if username == 'admin':
-                return HttpResponseRedirect("/admin")
+                return HttpResponseRedirect("/shop_admin")
             return HttpResponseRedirect("/menu")
         else:
             context = {}

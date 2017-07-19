@@ -5,7 +5,22 @@ import time
 import sqlite3
 from waimai.celery import app as celery_app
 from waimai.constants import WeekDay
+from datetime import datetime
+from celery.schedules import crontab
 
+@celery_app.task(name='get_today_menu')
+def get_today_menu(weekday):
+    weekday = datetime.today().weekday()
+    conn = sqlite3.connect('menu_list.db')
+    for shop_num in range(1, 4):
+        cursor = conn.execute("select SHOP_ID,IS_MOBILE from weekday_shop where WEEKDAY='%s' and SHOP_NUM='%s'" % (weekday, shop_num))
+        shop_id = ''
+        is_mobile = ''
+        for item in cursor:
+            shop_id = item[0]
+            is_mobile = (item[1] == '手机抓取')
+        if shop_id != '':
+            get_menu_by_id.delay(shop_num, shop_id, is_mobile)
 
 @celery_app.task(name='get_menu_by_id')
 def get_menu_by_id(shop_num,id,is_mobile=False):
