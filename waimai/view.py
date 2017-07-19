@@ -44,9 +44,9 @@ def admin(request):
     for i in range(1, 4):
         if 'shop%s' % i in request.GET:
             if 'is_%s_mobile' % i in request.GET and request.GET['is_%s_mobile' % i] == 'on':
-                get_menu_by_id(i, request.GET['shop%s' % i], is_mobile=True)
+                get_menu_by_id.delay(i, request.GET['shop%s' % i], is_mobile=True)
             else:
-                get_menu_by_id(i, request.GET['shop%s' % i])
+                get_menu_by_id.delay(i, request.GET['shop%s' % i])
             is_get = True
     if is_get:
         return HttpResponseRedirect('/menu')
