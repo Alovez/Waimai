@@ -5,7 +5,7 @@ from django.shortcuts import render, render_to_response
 from django.http import HttpResponse,HttpResponseRedirect
 import time
 from django.contrib import auth
-from waimai.utils.get_menu import get_menu_by_id, get_menu_from_db, get_shop
+from waimai.utils.get_menu import get_menu_by_id, get_menu_from_db, get_shop, get_shop_table,change_shop_table
 from waimai.utils.get_order import add_cart, get_cart, get_order, remove_order
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -44,9 +44,9 @@ def admin(request):
     for i in range(1, 4):
         if 'shop%s' % i in request.GET:
             if 'is_%s_mobile' % i in request.GET and request.GET['is_%s_mobile' % i] == 'on':
-                get_menu_by_id(i, request.GET['shop%s' % i], is_mobile=True)
+                get_menu_by_id.delay(i, request.GET['shop%s' % i], is_mobile=True)
             else:
-                get_menu_by_id(i, request.GET['shop%s' % i])
+                get_menu_by_id.delay(i, request.GET['shop%s' % i])
             is_get = True
     if is_get:
         return HttpResponseRedirect('/menu')
@@ -92,7 +92,7 @@ def login(req):
         if newUser is not None:
             auth.login(req, newUser)
             if username == 'admin':
-                return HttpResponseRedirect("/admin")
+                return HttpResponseRedirect("/shop_admin")
             return HttpResponseRedirect("/menu")
         else:
             context = {}
@@ -164,5 +164,39 @@ def reset(request):
             context = {}
             context['username'] = request.user.username
             return render(request, 'reset.html', context)
+    else:
+        return HttpResponseRedirect('/menu')
+
+@login_required()
+def shop_admin(request):
+    if request.user.username == 'admin':
+        shop_list = get_shop_table()
+        context = {}
+        context['shop_list'] = shop_list
+        print('*' * 10)
+        print(shop_list)
+        context['username'] = request.user.username
+        return render(request, 'shop_admin.html', context)
+    else:
+        return HttpResponseRedirect('/menu')
+
+@login_required()
+def change_shop(request):
+    if request.user.username == 'admin':
+        if 'shop_id' in request.GET:
+            if 'is_mobile' in request.GET:
+                is_mobile = '手机抓取'
+            else:
+                is_mobile = '网页抓取'
+            change_shop_table(request.GET['weekday'], request.GET['shop_num'], request.GET['shop_id'], is_mobile)
+            return HttpResponseRedirect('/shop_admin')
+        elif 'weekday' in request.GET:
+            context = {}
+            context['weekday'] = WeekDay.index(request.GET['weekday'])
+            context['shop_num'] = request.GET['shop_num']
+            context['username'] = request.user.username
+            return  render(request, 'change_shop.html', context)
+        else:
+            return HttpResponseRedirect('/menu')
     else:
         return HttpResponseRedirect('/menu')
