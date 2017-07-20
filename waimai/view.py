@@ -140,7 +140,6 @@ def summary(request):
     context['hello'] = '今天的点单如下'
     shop1 = get_order(1)
     context['shop1'] = shop1
-    print(shop1)
     context['shop1_name'] = get_shop(1)
     context['shop2_name'] = get_shop(2)
     context['shop3_name'] = get_shop(3)
@@ -173,8 +172,6 @@ def shop_admin(request):
         shop_list = get_shop_table()
         context = {}
         context['shop_list'] = shop_list
-        print('*' * 10)
-        print(shop_list)
         context['username'] = request.user.username
         return render(request, 'shop_admin.html', context)
     else:

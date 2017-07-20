@@ -24,7 +24,8 @@ def get_today_menu(weekday):
 
 @celery_app.task(name='get_menu_by_id')
 def get_menu_by_id(shop_num,id,is_mobile=False):
-    driver = webdriver.Chrome('D:\\UserApp\\chromedriver\\chromedriver.exe')
+    # driver = webdriver.Chrome('D:\\UserApp\\chromedriver\\chromedriver.exe')
+    driver = webdriver.PhantomJS('/root/phantomjs-2.1.1-linux-x86_64/bin/phantomjs')
     time.sleep(2)
     if is_mobile:
         driver.get('http://waimai.baidu.com/mobile/waimai?qt=shopmenu&is_attr=1&shop_id=%s&address=龙冠商务中心-银座&lat=4850537.27&lng=12951506' % id)
