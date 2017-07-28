@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import sys
 from datetime import timedelta
 from celery.schedules import crontab
 
@@ -141,3 +142,7 @@ CELERYBEAT_SCHEDULE = {
         'args': (2,)
     },
 }
+
+WEB_DRIVER_ENGINE = 'chrome'
+
+from waimai.settings_local import *

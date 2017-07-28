@@ -6,7 +6,7 @@ import sqlite3
 from waimai.celery import app as celery_app
 from waimai.constants import WeekDay
 from datetime import datetime
-from celery.schedules import crontab
+
 
 @celery_app.task(name='get_today_menu')
 def get_today_menu(weekday):
@@ -24,6 +24,7 @@ def get_today_menu(weekday):
 
 @celery_app.task(name='get_menu_by_id')
 def get_menu_by_id(shop_num,id,is_mobile=False):
+
     driver = webdriver.Chrome('D:\\UserApp\\chromedriver\\chromedriver.exe')
     time.sleep(2)
     if is_mobile:

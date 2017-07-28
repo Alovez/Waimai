@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from waimai.constants import WeekDay
+from django.conf import settings
 
 @login_required()
 def hello(request):
@@ -32,6 +33,7 @@ def hello(request):
     context['shop1_name'] = shop1[0][2]
     context['shop2_name'] = shop2[0][2]
     context['shop3_name'] = shop3[0][2]
+    print(settings.BASE_DIR)
     return render(request, 'menu.html', context)
 
 # bH1&5C

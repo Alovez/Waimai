@@ -79,33 +79,62 @@
 
         <!--<p>This is a template showcasing the optional theme stylesheet included in Bootstrap. Use it as a starting point to create something more unique by building on or modifying it.</p>-->
       </div>
+        <div class="row">
+            <span class="col-sm-4">
+                <h1>{{  shop1_name }}</h1>
+            </span>
+            <span class="col-sm-4">
+                <h1>{{  shop2_name }}</h1>
+            </span>
+            <span class="col-sm-4">
+                <h1>{{  shop3_name }}</h1>
+            </span>
+        </div>
       <div class="row">
         <div class="col-sm-4">
-          <h1>{{  shop1_name }}</h1>
           <div class="list-group">
             {% for item in shop1 %}
-                <a href="/menu?dish={{ item.1 }}&shop=1" class="list-group-item">{{ item.1 }}</a>
+              <div class="list-group-item row">
+                <a href="/menu?dish={{ item.1 }}&shop=1" class="col-sm-6">{{ item.1 }}</a>
+                  <div class="col-sm-6 row">
+                      <button class="btn col-sm-4">-</button>
+                      <input class="btn col-sm-4" value="0">
+                      <button class="btn col-sm-4">+</button>
+                  </div>
+              </div>
             {% endfor %}
           </div>
-        </div><!-- /.col-sm-4 -->
+        </div>
         <div class="col-sm-4">
-          <h1>{{  shop2_name }}</h1>
           <div class="list-group">
             {% for item in shop2 %}
-                <a href="/menu?dish={{ item.1 }}&shop=2" class="list-group-item">{{ item.1 }}</a>
+              <div class="list-group-item row">
+                <a href="/menu?dish={{ item.1 }}&shop=2" class="col-sm-6">{{ item.1 }}</a>
+                  <div class="col-sm-6 row">
+                      <button class="btn col-sm-4">-</button>
+                      <input class="btn col-sm-4" value="0">
+                      <button class="btn col-sm-4">+</button>
+                  </div>
+              </div>
             {% endfor %}
           </div>
-        </div><!-- /.col-sm-4 -->
+        </div>
         <div class="col-sm-4">
-          <h1>{{  shop3_name }}</h1>
           <div class="list-group">
             {% for item in shop3 %}
-                <a href="/menu?dish={{ item.1 }}&shop=3" class="list-group-item">{{ item.1 }}</a>
+              <div class="list-group-item row">
+                <a href="/menu?dish={{ item.1 }}&shop=3" class="col-sm-6">{{ item.1 }}</a>
+                  <div class="col-sm-6 row">
+                      <button class="btn col-sm-4">-</button>
+                      <input class="btn col-sm-4" value="0">
+                      <button class="btn col-sm-4">+</button>
+                  </div>
+              </div>
             {% endfor %}
           </div>
-        </div><!-- /.col-sm-4 -->
+        </div>
       </div>
-
+    <a class="btn btn-primary btn-lg navbar-fixed-bottom">提交订单</a>
     </div><!-- /.container -->
 
 
