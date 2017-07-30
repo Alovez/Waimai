@@ -6,6 +6,8 @@ import sqlite3
 from waimai.celery import app as celery_app
 from waimai.constants import WeekDay
 from datetime import datetime
+import re
+import json
 
 
 @celery_app.task(name='get_today_menu')
@@ -28,23 +30,39 @@ def get_menu_by_id(shop_num,id,is_mobile=False):
     driver = webdriver.Chrome('D:\\UserApp\\chromedriver\\chromedriver.exe')
     time.sleep(2)
     if is_mobile:
-        driver.get('http://waimai.baidu.com/mobile/waimai?qt=shopmenu&is_attr=1&shop_id=%s&address=龙冠商务中心-银座&lat=4850537.27&lng=12951506' % id)
-        menu_list = driver.find_elements_by_css_selector('li.list-item.item-img')
-        shop_name_element = driver.find_element_by_css_selector('div.top-div>div.center-title')
-        shop_name = shop_name_element.text
+        driver.get(
+            'http://waimai.baidu.com/mobile/waimai?qt=shopmenu&is_attr=1&shop_id=%s&address=龙冠商务中心-银座&lat=4850537.27&lng=12951506' % id)
+        list_items = driver.find_elements_by_css_selector('#shopmenu-list li.list-item')
+        menu_list = []
+        for item in list_items:
+            dish_id = json.loads(item.get_attribute('data-item'))['itemId']
+            img_src = item.find_element_by_css_selector('div.lazy-div').get_attribute('data-url').replace('%', '%%')
+            dish_name = item.find_element_by_css_selector('h4.title').text
+            dish_price = item.find_element_by_css_selector('p.price').text
+            if [dish_id, dish_name, img_src, dish_price] not in menu_list:
+                menu_list.append([dish_id, dish_name, img_src, dish_price])
     else:
-        driver.get('http://waimai.baidu.com/waimai/shop/' + id) #1430724018
-        menu_list = driver.find_elements_by_css_selector('li.list-item')
-        shop_name_element = driver.find_element_by_css_selector('section.breadcrumb>span')
-        shop_name = shop_name_element.text
-    # TODO: 抓取图片
+        driver.get('http://waimai.baidu.com/waimai/shop/%s' % id)  # 1430724018
+        list_items = driver.find_elements_by_css_selector('section.menu-list li.list-item')
+        menu_list = []
+        for menu_item in list_items:
+            dish_id = menu_item.get_attribute('data-sid').replace('item_', '')
+            img_item = menu_item.find_element_by_css_selector('div.bg-img')
+            src_match = re.findall('background: url\((.*?)\)', img_item.get_attribute('style'), re.S)
+            img_src = src_match[0].strip()
+            dish_name = menu_item.find_element_by_css_selector('div.info.fl>h3').text
+            dish_price = menu_item.find_element_by_css_selector('div.info.fl>div.m-price strong').text
+            if [dish_id, dish_name, img_src, dish_price] not in menu_list:
+                menu_list.append([dish_id, dish_name, img_src, dish_price])
     conn = sqlite3.connect('menu_list.db')
     is_table = is_table_exist(conn, "today_table_%s"%shop_num)
     if not is_table:
         conn.execute('''CREATE TABLE today_table_%s
        (ID INT PRIMARY KEY     NOT NULL,
        NAME           TEXT    NOT NULL,
-       SHOP           TEXT     NOT NULL,
+       DISH_ID        TEXT    NOT NULL,
+       DISH_PRICE     TEXT    NOT_NULL,
+       DISH_IMG       TEXT,
        SHOP_ID        TEXT     NOT NULL);''' % (shop_num))
         conn.commit()
     else:
@@ -53,10 +71,8 @@ def get_menu_by_id(shop_num,id,is_mobile=False):
         conn.commit()
     item_id = 0
     for item in menu_list:
-        n_pos = item.text.find('\n')
-        name = item.text[:n_pos]
-        conn.execute("INSERT INTO today_table_%s (ID,NAME,SHOP,SHOP_ID) \
-                    VALUES (%s, '%s', '%s', '%s' )" % (shop_num ,item_id, name, shop_name, id))
+        conn.execute("INSERT INTO today_table_%s (ID,SHOP_ID,DISH_ID,NAME,DISH_IMG,DISH_PRICE) \
+                    VALUES (%s, '%s', '%s', '%s', '%s', '%s' )" % (shop_num ,item_id, id, item[0], item[1], item[2], item[3]))
         item_id += 1
     conn.commit()
     conn.close()
