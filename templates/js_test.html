@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery/jquery-1.4.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $("#btn1").click(function(){
+     dish={"dish1":0, "dish2":1}
+    $("div").data("dish_data",dish);
+  });
+  $("#btn2").click(function(){
+    new_data=$("div").data("dish_data")
+    new_data.dish3=4;
+    alert($("div").data("dish_data").dish3);
+  });
+});
+</script>
+</head>
+<body>
+<button id="btn1">把数据添加到 div 元素</button><br />
+<button id="btn2">获取已添加到 div 元素的数据</button>
+<div></div>
+</body>
+</html>

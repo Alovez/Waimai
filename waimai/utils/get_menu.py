@@ -41,19 +41,26 @@ def get_menu_by_id(shop_num,id,is_mobile=False):
             dish_price = item.find_element_by_css_selector('p.price').text
             if [dish_id, dish_name, img_src, dish_price] not in menu_list:
                 menu_list.append([dish_id, dish_name, img_src, dish_price])
+        shop_name_element = driver.find_element_by_css_selector('div.top-div>div.center-title')
+        shop_name = shop_name_element.text
     else:
         driver.get('http://waimai.baidu.com/waimai/shop/%s' % id)  # 1430724018
         list_items = driver.find_elements_by_css_selector('section.menu-list li.list-item')
         menu_list = []
         for menu_item in list_items:
             dish_id = menu_item.get_attribute('data-sid').replace('item_', '')
-            img_item = menu_item.find_element_by_css_selector('div.bg-img')
-            src_match = re.findall('background: url\((.*?)\)', img_item.get_attribute('style'), re.S)
+            try:
+                img_item = menu_item.find_element_by_css_selector('div.bg-img')
+            except:
+                img_item = None
+            src_match = re.findall('background: url\(\"(.*?)\"\)', img_item.get_attribute('style'), re.S)
             img_src = src_match[0].strip()
             dish_name = menu_item.find_element_by_css_selector('div.info.fl>h3').text
             dish_price = menu_item.find_element_by_css_selector('div.info.fl>div.m-price strong').text
             if [dish_id, dish_name, img_src, dish_price] not in menu_list:
                 menu_list.append([dish_id, dish_name, img_src, dish_price])
+        shop_name_element = driver.find_element_by_css_selector('section.breadcrumb>span')
+        shop_name = shop_name_element.text
     conn = sqlite3.connect('menu_list.db')
     is_table = is_table_exist(conn, "today_table_%s"%shop_num)
     if not is_table:
@@ -63,6 +70,7 @@ def get_menu_by_id(shop_num,id,is_mobile=False):
        DISH_ID        TEXT    NOT NULL,
        DISH_PRICE     TEXT    NOT_NULL,
        DISH_IMG       TEXT,
+       SHOP           TEXT     NOT NULL,
        SHOP_ID        TEXT     NOT NULL);''' % (shop_num))
         conn.commit()
     else:
@@ -71,8 +79,8 @@ def get_menu_by_id(shop_num,id,is_mobile=False):
         conn.commit()
     item_id = 0
     for item in menu_list:
-        conn.execute("INSERT INTO today_table_%s (ID,SHOP_ID,DISH_ID,NAME,DISH_IMG,DISH_PRICE) \
-                    VALUES (%s, '%s', '%s', '%s', '%s', '%s' )" % (shop_num ,item_id, id, item[0], item[1], item[2], item[3]))
+        conn.execute("INSERT INTO today_table_%s (ID,SHOP_ID,DISH_ID,NAME,DISH_IMG,DISH_PRICE,SHOP) \
+                    VALUES (%s, '%s', '%s', '%s', '%s', '%s','%s')" % (shop_num ,item_id, id, item[0], item[1], item[2], item[3], shop_name))
         item_id += 1
     conn.commit()
     conn.close()
@@ -85,9 +93,10 @@ def get_menu_by_id(shop_num,id,is_mobile=False):
 
 def get_menu_from_db(shop_num):
     conn = sqlite3.connect('menu_list.db')
-    cursor = conn.execute('select ID,NAME,SHOP FROM today_table_%s'%shop_num)
+    cursor = conn.execute('select ID,NAME,SHOP,DISH_PRICE,DISH_IMG FROM today_table_%s'%shop_num)
     result = []
     for row in cursor:
+
         result.append(row)
     conn.close()
     return result
