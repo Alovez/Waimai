@@ -35,6 +35,7 @@ def hello(request):
     context['shop1_name'] = shop1[0][2]
     context['shop2_name'] = shop2[0][2]
     context['shop3_name'] = shop3[0][2]
+    context['shop_list'] = [shop1, shop2, shop3]
     print(settings.BASE_DIR)
     return render(request, 'menu.html', context)
 
@@ -42,8 +43,8 @@ def hello(request):
 def submit_order(request):
     if request.method == 'POST':
         for item in request.POST:
-            print(item)
-            print(request.POST[item])
+            for i in range(int(request.POST[item])):
+                add_cart(request.user.username, item[1:])
     return HttpResponseRedirect('/menu')
 
 

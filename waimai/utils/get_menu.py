@@ -44,7 +44,7 @@ def get_menu_by_id(shop_num,id,is_mobile=False):
         shop_name_element = driver.find_element_by_css_selector('div.top-div>div.center-title')
         shop_name = shop_name_element.text
     else:
-        driver.get('http://waimai.baidu.com/waimai/shop/%s' % id)  # 1430724018
+        driver.get('http://waimai.baidu.com/waimai/shop/%s' % id)  # 1430724018 1847973726 1438078393
         list_items = driver.find_elements_by_css_selector('section.menu-list li.list-item')
         menu_list = []
         for menu_item in list_items:
@@ -56,7 +56,7 @@ def get_menu_by_id(shop_num,id,is_mobile=False):
             src_match = re.findall('background: url\(\"(.*?)\"\)', img_item.get_attribute('style'), re.S)
             img_src = src_match[0].strip()
             dish_name = menu_item.find_element_by_css_selector('div.info.fl>h3').text
-            dish_price = menu_item.find_element_by_css_selector('div.info.fl>div.m-price strong').text
+            dish_price = menu_item.find_element_by_css_selector('div.info.fl strong').text
             if [dish_id, dish_name, img_src, dish_price] not in menu_list:
                 menu_list.append([dish_id, dish_name, img_src, dish_price])
         shop_name_element = driver.find_element_by_css_selector('section.breadcrumb>span')
@@ -100,6 +100,31 @@ def get_menu_from_db(shop_num):
         result.append(row)
     conn.close()
     return result
+
+def get_dish_name_by_id(dish_id):
+    conn = sqlite3.connect('menu_list.db')
+    dish_name = '未知菜品，请确认后重试'
+    shop_num = -1
+    for i in range(1, 4):
+        cursor = conn.execute("select NAME from today_table_%s where DISH_ID='%s'" % (i, dish_id))
+        for item in cursor:
+            if len(item):
+                dish_name = item[0]
+                shop_num = i
+    conn.close()
+    return [dish_name, shop_num]
+
+def get_shop_id_by_id(dish_id):
+    conn = sqlite3.connect('menu_list.db')
+    shop_id = '未知饭店，请确认后重试'
+    for i in range(1, 4):
+        cursor = conn.execute("select SHOP_ID from today_table_%s where DISH_ID='%s'" % (i, dish_id))
+        for item in cursor:
+            if len(item):
+                shop_id = item[0]
+    conn.close()
+    return shop_id
+
 
 def get_shop(shop_id):
     conn = sqlite3.connect('menu_list.db')

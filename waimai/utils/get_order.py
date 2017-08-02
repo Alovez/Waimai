@@ -1,6 +1,6 @@
 import sqlite3
 import time
-
+from waimai.utils.get_menu import get_dish_name_by_id, get_shop_id_by_id
 
 def get_cart(username):
     conn = sqlite3.connect('order_info')
@@ -12,7 +12,7 @@ def get_cart(username):
     conn.close()
     return dishes
 
-def add_cart(username, dish, shop_id):
+def add_cart(username, dish_id):
     conn = sqlite3.connect('order_info')
     cursor = conn.execute("select name from sqlite_master where type='table' order by name;")
     is_table = False
@@ -31,8 +31,9 @@ def add_cart(username, dish, shop_id):
     last_id = 0
     for row in id_cursor:
         last_id = row[0]
+    info = get_dish_name_by_id(dish_id)
     conn.execute("insert into order_list (ID,NAME,DISH,SHOP,TIME) "
-                 "values ('%s','%s','%s','%s','%s')" % (last_id + 1, username, dish, shop_id, get_today_date()))
+                 "values ('%s','%s','%s','%s','%s')" % (last_id + 1, username, info[0], info[1], get_today_date()))
     conn.commit()
     conn.close()
 

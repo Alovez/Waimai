@@ -128,9 +128,9 @@
                       </div>
                       <!--<a href="/menu?dish={{ item.1 }}&shop=1" class="row">{{ item.1 }}</a>-->
                       <div class="row" style="vertical-align:bottom;">
-                          <button class="btn col-xs-2 col-xs-offset-6">-</button>
-                          <input class="btn col-xs-2" value="0">
-                          <button class="btn col-xs-2">+</button>
+                          <button class="btn col-xs-2 col-xs-offset-6" id="{{ item.5 }}less">-</button>
+                          <input id="{{ item.5 }}text" class="btn col-xs-2" value="0">
+                          <button id="{{ item.5 }}add" class="btn col-xs-2">+</button>
                       </div>
                   </div>
               </div>
@@ -151,9 +151,9 @@
                       </div>
                       <!--<a href="/menu?dish={{ item.1 }}&shop=1" class="row">{{ item.1 }}</a>-->
                       <div class="row" style="vertical-align:bottom;">
-                          <button class="btn col-xs-2 col-xs-offset-6">-</button>
-                          <input class="btn col-xs-2" value="0">
-                          <button class="btn col-xs-2">+</button>
+                          <button class="btn col-xs-2 col-xs-offset-6" id="{{ item.5 }}less">-</button>
+                          <input id="{{ item.5 }}text" class="btn col-xs-2" value="0">
+                          <button id="{{ item.5 }}add" class="btn col-xs-2">+</button>
                       </div>
                   </div>
               </div>
@@ -173,7 +173,8 @@
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
         $(document).ready(function(){
-            {% for item in shop1 %}
+        {% for shop in shop_list %}
+            {% for item in shop %}
                 $("#{{ item.5 }}less").click(function(){
                     dish_num=$("#{{ item.5 }}text").val();
                     if(dish_num > 0){
@@ -201,6 +202,7 @@
                     $("#submit_order").data("dish_info", dish);
                 });
             {% endfor %}
+        {% endfor %}
             $("#submit_order").click(function(){
                 dish_info = $("#submit_order").data("dish_info");
                 $.post("/submit_order", dish_info, function(){
