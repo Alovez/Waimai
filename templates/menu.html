@@ -105,9 +105,9 @@
                       </div>
                       <!--<a href="/menu?dish={{ item.1 }}&shop=1" class="row">{{ item.1 }}</a>-->
                       <div class="row" style="vertical-align:bottom;">
-                          <button class="btn col-xs-2 col-xs-offset-6">-</button>
-                          <input class="btn col-xs-2" value="0">
-                          <button class="btn col-xs-2">+</button>
+                          <button class="btn col-xs-2 col-xs-offset-6" id="{{ item.5 }}less">-</button>
+                          <input id="{{ item.5 }}text" class="btn col-xs-2" value="0">
+                          <button id="{{ item.5 }}add" class="btn col-xs-2">+</button>
                       </div>
                   </div>
               </div>
@@ -161,7 +161,7 @@
           </div>
         </div>
       </div>
-    <a class="btn btn-primary btn-lg navbar-fixed-bottom">提交订单</a>
+    <a class="btn btn-primary btn-lg navbar-fixed-bottom" id="submit_order">提交订单</a>
     </div><!-- /.container -->
 
 
@@ -173,7 +173,40 @@
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
         $(document).ready(function(){
-
+            {% for item in shop1 %}
+                $("#{{ item.5 }}less").click(function(){
+                    dish_num=$("#{{ item.5 }}text").val();
+                    if(dish_num > 0){
+                        dish_num--;
+                    }
+                    $("#{{ item.5 }}text").val(dish_num);
+                    dish=$("#submit_order").data("dish_info");
+                    if(dish){
+                        dish.n{{ item.5 }} = dish_num;
+                    }else{
+                        dish = {"n{{ item.5 }}":dish_num }
+                    }
+                    $("#submit_order").data("dish_info", dish);
+                });
+                $("#{{ item.5 }}add").click(function(){
+                    dish_num=$("#{{ item.5 }}text").val()
+                    dish_num++;
+                    $("#{{ item.5 }}text").val(dish_num);
+                    dish=$("#submit_order").data("dish_info");
+                    if(dish){
+                        dish.n{{ item.5 }} = dish_num;
+                    }else{
+                        dish = {"n{{ item.5 }}":dish_num }
+                    }
+                    $("#submit_order").data("dish_info", dish);
+                });
+            {% endfor %}
+            $("#submit_order").click(function(){
+                dish_info = $("#submit_order").data("dish_info");
+                $.post("/submit_order", dish_info, function(){
+                    alert("已提交");
+                });
+            });
         });
     </script>
   </body>

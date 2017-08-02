@@ -93,7 +93,7 @@ def get_menu_by_id(shop_num,id,is_mobile=False):
 
 def get_menu_from_db(shop_num):
     conn = sqlite3.connect('menu_list.db')
-    cursor = conn.execute('select ID,NAME,SHOP,DISH_PRICE,DISH_IMG FROM today_table_%s'%shop_num)
+    cursor = conn.execute('select ID,NAME,SHOP,DISH_PRICE,DISH_IMG,DISH_ID FROM today_table_%s'%shop_num)
     result = []
     for row in cursor:
 

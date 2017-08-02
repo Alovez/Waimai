@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^change/$', view.change),
     url(r'^shop_admin/$', view.shop_admin),
     url(r'^change_shop/$', view.change_shop),
+    url(r'^submit_order', view.submit_order)
 ]
 
 # TODO: 尝试自动下单

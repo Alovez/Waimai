@@ -12,6 +12,8 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from waimai.constants import WeekDay
 from django.conf import settings
+import json
+from django.views.decorators.csrf import csrf_exempt
 
 @login_required()
 def hello(request):
@@ -35,6 +37,15 @@ def hello(request):
     context['shop3_name'] = shop3[0][2]
     print(settings.BASE_DIR)
     return render(request, 'menu.html', context)
+
+@csrf_exempt
+def submit_order(request):
+    if request.method == 'POST':
+        for item in request.POST:
+            print(item)
+            print(request.POST[item])
+    return HttpResponseRedirect('/menu')
+
 
 # bH1&5C
 @login_required()
