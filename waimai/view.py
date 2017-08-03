@@ -154,7 +154,6 @@ def summary(request):
     context['hello'] = '今天的点单如下'
     shop1 = get_order(1)
     context['shop1'] = shop1
-    print(shop1)
     context['shop1_name'] = get_shop(1)
     context['shop2_name'] = get_shop(2)
     context['shop3_name'] = get_shop(3)
@@ -214,3 +213,7 @@ def change_shop(request):
             return HttpResponseRedirect('/menu')
     else:
         return HttpResponseRedirect('/menu')
+
+@login_required()
+def summary_custom(request):
+    return render(request, 'summary_month.html')

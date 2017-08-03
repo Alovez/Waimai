@@ -57,6 +57,17 @@ def get_order(shop_id):
         menu.append([item[0], dishes[item[0]]])
     return menu
 
+def get_order_by_name_date(username, start_date, end_date):
+    conn = sqlite3.connect('order_info')
+    cursor = conn.execute("select DISH, PRICE from order_list "
+                          "where datetime(TIME) > '%s' and datetime(TIME) <= datetime('%s','+1 day') "
+                          "and NAME='%s'" % (start_date, end_date, username))
+    dishes = []
+    for item in cursor:
+        dishes.append(item)
+    conn.close()
+    return dishes
+
 def remove_order(username, dish, shop):
     conn = sqlite3.connect('order_info')
     cursor = conn.execute("select ID from order_list "
