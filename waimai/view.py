@@ -137,8 +137,8 @@ def logout(req):
 
 @login_required()
 def cart(req):
-    if 'dish' in req.GET:
-        remove_order(req.user.username, req.GET['dish'], req.GET['shop'])
+    if 'dish_id' in req.GET:
+        remove_order(req.user.username, req.GET['dish_id'], req.GET['shop'])
     dishes = get_cart(req.user.username)
     context = {}
     context['dishes'] = dishes

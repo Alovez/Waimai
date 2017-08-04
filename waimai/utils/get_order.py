@@ -4,12 +4,11 @@ from waimai.utils.get_menu import get_dish_name_by_id, get_shop_id_by_id
 
 def get_cart(username):
     conn = sqlite3.connect('order_info')
-    cursor = conn.execute("select DISH,SHOP from order_list"
+    cursor = conn.execute("select DISH,SHOP,DISH_ID from order_list"
                           " where NAME='%s' and TIME='%s'" % (username, get_today_date()))
     dishes = []
     for row in cursor:
-        dishes.append([row[0],row[1]])
-    conn.close()
+        dishes.append([row[0],row[1], row[2]])
     return dishes
 
 def add_cart(username, dish_id):
@@ -24,6 +23,7 @@ def add_cart(username, dish_id):
        (ID INT PRIMARY KEY     NOT NULL,
        NAME           TEXT     NOT NULL,
        DISH           TEXT     NOT NULL,
+       DISH_ID        TEXT     NOT NULL,
        SHOP           TEXT     NOT NULL,
        TIME        TEXT     NOT NULL);''')
         conn.commit()
@@ -32,8 +32,8 @@ def add_cart(username, dish_id):
     for row in id_cursor:
         last_id = row[0]
     info = get_dish_name_by_id(dish_id)
-    conn.execute("insert into order_list (ID,NAME,DISH,SHOP,TIME) "
-                 "values ('%s','%s','%s','%s','%s')" % (last_id + 1, username, info[0], info[1], get_today_date()))
+    conn.execute("insert into order_list (ID,NAME,DISH,DISH_ID,SHOP,TIME) "
+                 "values ('%s','%s','%s','%s','%s','%s')" % (last_id + 1, username, info[0], dish_id, info[1], get_today_date()))
     conn.commit()
     conn.close()
 
@@ -68,10 +68,10 @@ def get_order_by_name_date(username, start_date, end_date):
     conn.close()
     return dishes
 
-def remove_order(username, dish, shop):
+def remove_order(username, dish_id, shop):
     conn = sqlite3.connect('order_info')
     cursor = conn.execute("select ID from order_list "
-                          "where NAME='%s' and DISH='%s' and SHOP='%s' limit 1" % (username, dish, shop))
+                          "where NAME='%s' and DISH_ID='%s' and SHOP='%s' and TIME='%s' limit 1" % (username, dish_id, shop, get_today_date()))
     for item in cursor:
         conn.execute('delete from order_list where ID=%s' % item[0])
         conn.commit()
