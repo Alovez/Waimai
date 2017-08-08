@@ -57,18 +57,23 @@
 
     <div class="container">
         <div class="jumbotron">
-        <h1></h1>
-        <h1>{{ hello }}</h1>
+            <h3>{{ hello }}</h3>
             <div class="row">
-                <div class="demo col-xs-4">
-                    <input class="form-control" type="text" id="range_picker">
-                    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
-                </div>
-                <<div class="col-xs-4">
-                    <input type="text">
-                </div>
+                <form class="form-inline">
+                    <div class="form-group">
+                        <div class="demo">
+                            <label for="range_picker">选择日期</label>
+                            <input class="form-control" type="text" id="range_picker">
+                            <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="query_name">用户名</label>
+                        <input type="text" class="form-control" id="query_name" placeholder="需要查询的用户名">
+                    </div>
+                    <button id="submit_post" class="btn btn-default">查询</button>
+                </form>
             </div>
-
         <!--<p>This is a template showcasing the optional theme stylesheet included in Bootstrap. Use it as a starting point to create something more unique by building on or modifying it.</p>-->
       </div>
       <div class="row">
@@ -86,7 +91,7 @@
     <style type="text/css">
       .demo { position: relative; }
       .demo i {
-        position: absolute; bottom: 10px; right: 24px; top: auto; cursor: pointer;
+        position: absolute; bottom: 10px; right: 10px; top: auto; cursor: pointer;
       }
     </style>
 
@@ -105,6 +110,14 @@
             "endDate": "08/03/2017"
         }, function(start, end, label) {
             console.log("New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')");
+            date_info = {'start':start.format('YYYY-MM-DD'), 'end':end.format('YYYY-MM-DD')};
+            $("#submit_post").data('submit_data',date_info);
+        });
+        $("#submit_post").click(function(){
+            submit_data = $("#submit_post").data('submit_data')
+            $.post("/summary_custom", submit_data, function(){
+                    alert("已提交");
+            });
         });
     </script>
   </body>

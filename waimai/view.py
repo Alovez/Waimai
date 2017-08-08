@@ -214,6 +214,16 @@ def change_shop(request):
     else:
         return HttpResponseRedirect('/menu')
 
+@csrf_exempt
 @login_required()
 def summary_custom(request):
-    return render(request, 'summary_month.html')
+    if request.method == 'POST':
+        start_date = request.POST['start']
+        end_date = request.POST['end']
+        print(start_date)
+        print(end_date)
+    else:
+        print('no post')
+    context = {}
+    context['hello'] = '按日期查询点餐记录'
+    return render(request, 'summary_month.html', context)
