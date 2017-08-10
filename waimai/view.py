@@ -6,12 +6,13 @@ from django.http import HttpResponse,HttpResponseRedirect
 import time
 from django.contrib import auth
 from waimai.utils.get_menu import get_menu_by_id, get_menu_from_db, get_shop, get_shop_table,change_shop_table
-from waimai.utils.get_order import add_cart, get_cart, get_order, remove_order
+from waimai.utils.get_order import add_cart, get_cart, get_order, remove_order, get_order_by_name_date
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from waimai.constants import WeekDay
 from django.conf import settings
+from django.http import JsonResponse
 import json
 from django.views.decorators.csrf import csrf_exempt
 
@@ -217,13 +218,26 @@ def change_shop(request):
 @csrf_exempt
 @login_required()
 def summary_custom(request):
+    context = {}
+    context['hello'] = '按日期查询点餐记录'
     if request.method == 'POST':
         start_date = request.POST['start']
         end_date = request.POST['end']
-        print(start_date)
-        print(end_date)
-    else:
-        print('no post')
-    context = {}
-    context['hello'] = '按日期查询点餐记录'
+        if 'user' in request.POST:
+            user = request.POST['user']
+        else:
+            user = 'all'
+        summary_data = get_order_by_name_date(user,start_date, end_date)
+        context['summary_data'] = summary_data
     return render(request, 'summary_month.html', context)
+
+def ajax_summary(request):
+    print('get ajax call')
+    start_date = request.GET['start']
+    end_date = request.GET['end']
+    if 'user' in request.GET:
+        user = request.GET['user']
+    else:
+        user = 'all'
+    summary_data = get_order_by_name_date(user, start_date, end_date)
+    return  JsonResponse(summary_data)

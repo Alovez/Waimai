@@ -33,7 +33,8 @@ urlpatterns = [
     url(r'^shop_admin/$', view.shop_admin),
     url(r'^change_shop/$', view.change_shop),
     url(r'^submit_order', view.submit_order),
-    url(r'^summary_custom', view.summary_custom)
+    url(r'^summary_custom', view.summary_custom),
+    url(r'^ajax_summary', view.ajax_summary,'summary-ajax')
 ]
 
 # TODO: 尝试自动下单

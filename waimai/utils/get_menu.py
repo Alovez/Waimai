@@ -101,18 +101,20 @@ def get_menu_from_db(shop_num):
     conn.close()
     return result
 
-def get_dish_name_by_id(dish_id):
+def get_dish_info_by_id(dish_id):
     conn = sqlite3.connect('menu_list.db')
     dish_name = '未知菜品，请确认后重试'
+    price = '价格暂缺'
     shop_num = -1
     for i in range(1, 4):
-        cursor = conn.execute("select NAME from today_table_%s where DISH_ID='%s'" % (i, dish_id))
+        cursor = conn.execute("select NAME, DISH_PRICE from today_table_%s where DISH_ID='%s'" % (i, dish_id))
         for item in cursor:
             if len(item):
                 dish_name = item[0]
+                price = item[1]
                 shop_num = i
     conn.close()
-    return [dish_name, shop_num]
+    return [dish_name, shop_num, price]
 
 def get_shop_id_by_id(dish_id):
     conn = sqlite3.connect('menu_list.db')

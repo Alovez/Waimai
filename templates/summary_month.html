@@ -77,10 +77,9 @@
         <!--<p>This is a template showcasing the optional theme stylesheet included in Bootstrap. Use it as a starting point to create something more unique by building on or modifying it.</p>-->
       </div>
       <div class="row">
-        <div class="col-sm-4">
-          <h1>{{  shop1_name }}</h1>
-          <div class="list-group">
-            {% for item in shop1 %}
+        <div class="col-sm-6">
+          <div id="summary_list" class="list-group">
+            {% for item in summary_data %}
                 <a href="#" class="list-group-item">{{ item.0 }}<p>数量： {{ item.1 }}</p></a>
             {% endfor %}
           </div>
@@ -105,6 +104,15 @@
     <script type="text/javascript" src="/statics/js/moment.js"></script>
     <script type="text/javascript" src="/statics/js/daterangepicker.js"></script>
     <script>
+        $('#query_name').change(function(){
+            submit_data = $("#submit_post").data('submit_data')
+            if(submit_data){
+                submit_data.user = $('#query_name').val();
+            }else{
+                submit_data = {'user':$('#query_name').val()}
+            }
+            $("#submit_post").data('submit_data',submit_data);
+        });
         $('#range_picker').daterangepicker({
             "startDate": "07/28/2017",
             "endDate": "08/03/2017"
@@ -115,8 +123,10 @@
         });
         $("#submit_post").click(function(){
             submit_data = $("#submit_post").data('submit_data')
-            $.post("/summary_custom", submit_data, function(){
-                    alert("已提交");
+            $.ajax("ajax_summary", submit_data, function(ret){
+                $.each(ret, function(i,item){
+                    $('#summary_list').append(item[0])
+                });
             });
         });
     </script>
