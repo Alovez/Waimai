@@ -138,7 +138,7 @@ CELERY_TIMEZONE = 'Asia/Harbin'
 CELERYBEAT_SCHEDULE = {
     'add-every-workday-afternoon': {
         'task': 'get_today_menu',
-        'schedule': crontab(hour=19, minute=32, day_of_week='mon,tue,wed,thu,fri'),
+        'schedule': crontab(hour=17, minute=30, day_of_week='mon,tue,wed,thu,fri'),
         'args': (2,)
     },
 }

@@ -71,7 +71,7 @@
                         <label for="query_name">用户名</label>
                         <input type="text" class="form-control" id="query_name" placeholder="需要查询的用户名">
                     </div>
-                    <button id="submit_post" class="btn btn-default">查询</button>
+                    <div id="submit_post" class="btn btn-default">查询</div>
                 </form>
             </div>
         <!--<p>This is a template showcasing the optional theme stylesheet included in Bootstrap. Use it as a starting point to create something more unique by building on or modifying it.</p>-->
@@ -123,10 +123,16 @@
         });
         $("#submit_post").click(function(){
             submit_data = $("#submit_post").data('submit_data')
-            $.ajax("ajax_summary", submit_data, function(ret){
-                $.each(ret, function(i,item){
-                    $('#summary_list').append(item[0])
-                });
+            $.ajax({
+                type:"POST",
+                url:"/ajax_summary",
+                data:submit_data,
+                success: function(ret){
+                    $("#summary_list").empty()
+                 $.each(ret, function(i,item){
+                    $("#summary_list").append('<a href="#" class="list-group-item">' + item[0] + '<p>价格： ' + item[1] + '</p></a>')
+                 });
+                }
             });
         });
     </script>

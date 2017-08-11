@@ -215,11 +215,15 @@ def change_shop(request):
     else:
         return HttpResponseRedirect('/menu')
 
-@csrf_exempt
 @login_required()
 def summary_custom(request):
     context = {}
     context['hello'] = '按日期查询点餐记录'
+    return render(request, 'summary_month.html', context)
+
+@csrf_exempt
+def ajax_summary(request):
+    print('get ajax call')
     if request.method == 'POST':
         start_date = request.POST['start']
         end_date = request.POST['end']
@@ -228,16 +232,10 @@ def summary_custom(request):
         else:
             user = 'all'
         summary_data = get_order_by_name_date(user,start_date, end_date)
-        context['summary_data'] = summary_data
-    return render(request, 'summary_month.html', context)
-
-def ajax_summary(request):
-    print('get ajax call')
-    start_date = request.GET['start']
-    end_date = request.GET['end']
-    if 'user' in request.GET:
-        user = request.GET['user']
+        result = summary_data
     else:
-        user = 'all'
-    summary_data = get_order_by_name_date(user, start_date, end_date)
-    return  JsonResponse(summary_data)
+        result = [['无点餐记录','或无此用户']]
+    if not len(result):
+        result = [['无点餐记录或无此用户', 'N/A']]
+    json_result = json.dumps(result)
+    return  HttpResponse(json_result, content_type='application/json')
