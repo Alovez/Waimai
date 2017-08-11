@@ -21,8 +21,7 @@ def hello(request):
     context = {}
     if 'dish' in request.GET and request.user.username != 'admin':
         dish = request.GET['dish']
-        shop_id = request.GET['shop']
-        add_cart(request.user.username, dish, shop_id)
+        add_cart(request.user.username, dish)
         context['dish'] = dish
     context['hello'] = WeekDay[datetime.today().weekday()]
     context['username'] = request.user.username

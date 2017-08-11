@@ -54,10 +54,10 @@ def get_menu_by_id(shop_num,id,is_mobile=False):
             dish_id = menu_item.get_attribute('data-sid').replace('item_', '')
             try:
                 img_item = menu_item.find_element_by_css_selector('div.bg-img')
+                src_match = re.findall('background: url\(\"(.*?)\"\)', img_item.get_attribute('style'), re.S)
+                img_src = src_match[0].strip()
             except:
-                img_item = None
-            src_match = re.findall('background: url\(\"(.*?)\"\)', img_item.get_attribute('style'), re.S)
-            img_src = src_match[0].strip()
+                img_src = '暂无图片'
             dish_name = menu_item.find_element_by_css_selector('div.info.fl>h3').text
             dish_price = menu_item.find_element_by_css_selector('div.info.fl strong').text
             if [dish_id, dish_name, img_src, dish_price] not in menu_list:
@@ -99,8 +99,9 @@ def get_menu_from_db(shop_num):
     cursor = conn.execute('select ID,NAME,SHOP,DISH_PRICE,DISH_IMG,DISH_ID FROM today_table_%s'%shop_num)
     result = []
     for row in cursor:
-
-        result.append(row)
+        row_list = list(row)
+        row_list[4] = row_list[4].replace('%%', '%')
+        result.append(row_list)
     conn.close()
     return result
 
