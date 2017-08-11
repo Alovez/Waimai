@@ -8,6 +8,7 @@ from waimai.constants import WeekDay
 from datetime import datetime
 import re
 import json
+from waimai.settings import WEB_DRIVER_ENGINE, CHROME_PATH, PHANTOMJS_PATH
 
 
 @celery_app.task(name='get_today_menu')
@@ -26,8 +27,10 @@ def get_today_menu(weekday):
 
 @celery_app.task(name='get_menu_by_id')
 def get_menu_by_id(shop_num,id,is_mobile=False):
-
-    driver = webdriver.Chrome('D:\\UserApp\\chromedriver\\chromedriver.exe')
+    if WEB_DRIVER_ENGINE == 'chrome':
+        driver = webdriver.Chrome(CHROME_PATH)
+    else:
+        driver = webdriver.PhantomJS(PHANTOMJS_PATH)
     time.sleep(2)
     if is_mobile:
         driver.get(

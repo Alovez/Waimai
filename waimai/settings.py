@@ -145,4 +145,8 @@ CELERYBEAT_SCHEDULE = {
 
 WEB_DRIVER_ENGINE = 'chrome'
 
+CHROME_PATH = 'D:\\UserApp\\chromedriver\\chromedriver.exe'
+PHANTOMJS_PATH = '/root/phantomjs/bin/phantomjs'
+
+
 from waimai.settings_local import *
