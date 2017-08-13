@@ -205,10 +205,10 @@
         {% endfor %}
             $("#submit_order").click(function(){
                 dish_info = $("#submit_order").data("dish_info");
-                $("#submit_order").attr('disable', 'disabled')
+                $("#submit_order").hide();
                 $.post("/submit_order", dish_info, function(){
                     alert("已提交");
-                    $("#submit_order").attr('disable', '')
+                    $("#submit_order").show()
                 });
             });
         });
