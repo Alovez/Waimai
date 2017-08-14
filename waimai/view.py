@@ -14,6 +14,8 @@ from waimai.constants import WeekDay
 from django.conf import settings
 from django.http import JsonResponse
 import json
+import os
+import csv
 from django.views.decorators.csrf import csrf_exempt
 
 @login_required()
@@ -238,3 +240,46 @@ def ajax_summary(request):
         result = [['无点餐记录或无此用户', 'N/A']]
     json_result = json.dumps(result)
     return  HttpResponse(json_result, content_type='application/json')
+
+@login_required()
+def user_upload(request):
+    if request.user.username == 'admin':
+        context = {}
+        context['username'] = request.user.username
+        if request.method == "POST":  # 请求方法为POST时，进行处理
+            user_csv = request.FILES.get("user_cvs", None)  # 获取上传的文件，如果没有文件，则默认为None
+            if not user_csv:
+                context['result'] = '没有选取需要上传的文件'
+            else:
+                destination = open(os.path.join("./", user_csv.name), 'wb+')  # 打开特定的文件进行二进制的写操作
+                for chunk in user_csv.chunks():  # 分块写入文件
+                    destination.write(chunk)
+                destination.close()
+                error_list = []
+                with open(os.path.join("./", user_csv.name), 'r', encoding='UTF-8') as f:
+                    reader = csv.reader(f)
+                    try:
+                        for row in reader:
+                            username = row[0].encode('utf-8').decode('utf-8-sig')
+                            email = row[1]
+                            filterResult = User.objects.filter(username=username)
+                            if len(filterResult) > 0:
+                                error_list.append([username, '用户名已存在'])
+                                continue
+                            filterResult = User.objects.filter(email=email)
+                            if len(filterResult) > 0:
+                                error_list.append([username, '邮箱已存在'])
+                                continue
+                            user = User()
+                            user.username = username
+                            user.set_password('Digibird2009')
+                            user.email = email
+                            user.save()
+                        print(error_list)
+                        context['result'] = '上传成功'
+                        context['error_list'] = error_list
+                    except csv.Error as e:
+                        context['result'] = '文件错误： %s' % e
+        return render(request, 'upload_user.html', context)
+    else:
+        return HttpResponseRedirect('/menu')

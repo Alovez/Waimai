@@ -62,21 +62,21 @@
 
     <div class="container">
         <table class="table">
-  <caption>我的点单</caption>
-  <thead>
-    <tr>
-      <th>已点菜品</th>
-    </tr>
-  </thead>
-  <tbody>
-  {% for dish in dishes %}
-    <tr>
-      <td>{{ dish.0 }}</td>
-      <td><a class="btn btn-primary" href="/cart?dish_id={{ dish.2 }}&shop={{ dish.1 }}">删除</a></td>
-    </tr>
-  {% endfor %}
-  </tbody>
-</table>
+          <caption>我的点单</caption>
+          <thead>
+            <tr>
+              <th>已点菜品</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for dish in dishes %}
+            <tr>
+              <td>{{ dish.0 }}</td>
+              <td><a class="btn btn-primary" href="/cart?dish_id={{ dish.2 }}&shop={{ dish.1 }}">删除</a></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
     </div><!-- /.container -->
 
 
