@@ -1,4 +1,5 @@
 from selenium import webdriver
+import signal
 from selenium.webdriver.common.keys import Keys
 import selenium
 import urllib.request
@@ -70,6 +71,11 @@ def get_menu_by_id(shop_num, id, is_mobile=False):
                     menu_list.append([dish_id, dish_name, img_src, dish_price])
             shop_name_element = driver.find_element_by_css_selector('section.breadcrumb>span')
             shop_name = shop_name_element.text
+        if WEB_DRIVER_ENGINE == 'chrome':
+            driver.close()
+        else:
+            driver.service.process.send_signal(signal.SIGTERM)
+            driver.quit()
         driver.close()
     else:
         if is_mobile:
