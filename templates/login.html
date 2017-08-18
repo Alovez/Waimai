@@ -29,7 +29,7 @@
 
     <div class="container">
 
-      <form class="form-signin" action="/login/" method="post">
+      <form class="form-signin" action="/login/" method="post" onkeydown="if(event.keyCode==13)return false;">
         {% csrf_token %}
         <h2 class="form-signin-heading">登录</h2>
         <label for="inputUsername" class="sr-only">用户名</label>
@@ -42,10 +42,25 @@
             <!--<input type="checkbox" value="remember-me"> Remember me-->
           <!--</label>-->
         <!--</div>-->
-        <button class="btn btn-lg btn-primary btn-block" type="submit">登陆</button>
+        <button class="btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#myModal" type="submit">登陆</button>
         <!--<a class="btn btn-lg btn-primary btn-block" href="/regist">注册</a>-->
         <a href="mailto:anrui@digibird.com.cn?subject=我的账户出现了问题">联系管理员</a>
       </form>
     </div> <!-- /container -->
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h4 class="modal-title" id="myModalLabel">请等待</h4>
+              </div>
+            <div class="modal-body">
+                  正在登陆，请等待
+            </div>
+            <div class="modal-footer">
+            </div>
+          </div>
+        </div>
+    </div>
   </body>
 </html>
