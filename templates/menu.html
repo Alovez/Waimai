@@ -162,9 +162,25 @@
           </div>
         </div>
       </div>
-    <a class="btn btn-primary btn-lg navbar-fixed-bottom" id="submit_order">提交订单</a>
+    <a class="btn btn-primary btn-lg navbar-fixed-bottom" data-toggle="modal" data-target="#myModal" id="submit_order">提交订单</a>
     </div><!-- /.container -->
-
+    <!-- 模态框（Modal） -->
+  <div class="modal fade" data-show="false" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h4 class="modal-title" id="myModalLabel">
+                      请稍候
+                  </h4>
+              </div>
+              <div class="modal-body">
+                  正在提交，请稍候。。。
+              </div>
+              <div class="modal-footer">
+              </div>
+          </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+  </div>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -174,6 +190,7 @@
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
         $(document).ready(function(){
+            $('#myModal').modal({backdrop: 'static', keyboard: false});
         {% for shop in shop_list %}
             {% for item in shop %}
                 $("#{{ item.5 }}less").click(function(){
@@ -210,6 +227,7 @@
                 $.post("/submit_order", dish_info, function(){
                     alert("已提交");
                     $("#submit_order").show()
+                    $('#myModal').modal('hide');
                 });
             });
         });
