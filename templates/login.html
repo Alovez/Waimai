@@ -17,7 +17,8 @@
 
     <!-- Custom styles for this template -->
     <link href="/statics/css/signin.css" rel="stylesheet">
-
+    <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -43,24 +44,26 @@
           <!--</label>-->
         <!--</div>-->
         <button class="btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#myModal" type="submit">登陆</button>
-        <!--<a class="btn btn-lg btn-primary btn-block" href="/regist">注册</a>-->
+        <!--<a class="btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#myModal" href="#myModal">注册</a>-->
         <a href="mailto:anrui@digibird.com.cn?subject=我的账户出现了问题">联系管理员</a>
       </form>
     </div> <!-- /container -->
-    <!-- 模态框（Modal） -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+  <!-- 模态框（Modal） -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
           <div class="modal-content">
               <div class="modal-header">
-                  <h4 class="modal-title" id="myModalLabel">请等待</h4>
+                  <h4 class="modal-title" id="myModalLabel">
+                      请等待
+                  </h4>
               </div>
-            <div class="modal-body">
+              <div class="modal-body">
                   正在登陆，请等待
-            </div>
-            <div class="modal-footer">
-            </div>
-          </div>
-        </div>
-    </div>
+              </div>
+              <div class="modal-footer">
+              </div>
+          </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+  </div>
   </body>
 </html>
