@@ -35,7 +35,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/menu">点单</a>
+          <a class="navbar-brand" href="#menu_top">点单</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           {% if is_admin %}
@@ -76,24 +76,24 @@
           {% endif %}
         <div class="jumbotron">
         <h1></h1>
-        <h1>{{ hello }}</h1>
+        <h1 id="menu_top">{{ hello }}</h1>
 
         <!--<p>This is a template showcasing the optional theme stylesheet included in Bootstrap. Use it as a starting point to create something more unique by building on or modifying it.</p>-->
       </div>
         <div class="row">
             <span class="col-sm-4">
-                <h1>{{  shop1_name }}</h1>
+                <a href="#shop_1_list"><h1>{{  shop1_name }}</h1></a>
             </span>
             <span class="col-sm-4">
-                <h1>{{  shop2_name }}</h1>
+                <a href="#shop_2_list"><h1>{{  shop2_name }}</h1></a>
             </span>
             <span class="col-sm-4">
-                <h1>{{  shop3_name }}</h1>
+                <a href="#shop_3_list"><h1>{{  shop3_name }}</h1></a>
             </span>
         </div>
       <div class="row">
         <div class="col-sm-4">
-          <div class="list-group">
+          <div id="shop_1_list" class="list-group">
             {% for item in shop1 %}
               <div class="list-group-item row">
                   <img src="{{ item.4 }}" alt="菜单图片" class="img-rounded col-xs-4 img-responsive">
@@ -116,7 +116,7 @@
           </div>
         </div>
         <div class="col-sm-4">
-          <div class="list-group">
+          <div id="shop_2_list" class="list-group">
             {% for item in shop2 %}
               <div class="list-group-item row">
                   <img src="{{ item.4 }}" alt="菜单图片" class="img-rounded col-xs-4 img-responsive">
@@ -139,7 +139,7 @@
           </div>
         </div>
         <div class="col-sm-4">
-          <div class="list-group">
+          <div id="shop_3_list" class="list-group">
             {% for item in shop3 %}
               <div class="list-group-item row">
                   <img src="{{ item.4 }}" alt="菜单图片" class="img-rounded col-xs-4 img-responsive">

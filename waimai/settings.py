@@ -143,6 +143,10 @@ CELERYBEAT_SCHEDULE = {
     },
 }
 
+# soup, selenium
+CRAWL_DRIVER = 'soup'
+
+# chrome, phantomjs
 WEB_DRIVER_ENGINE = 'chrome'
 
 CHROME_PATH = 'D:\\UserApp\\chromedriver\\chromedriver.exe'
