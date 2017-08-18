@@ -188,8 +188,6 @@ def shop_admin(request):
         shop_list = get_shop_table()
         context = {}
         context['shop_list'] = shop_list
-        print('*' * 10)
-        print(shop_list)
         context['username'] = request.user.username
         return render(request, 'shop_admin.html', context)
     else:
