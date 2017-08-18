@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import sys
 from datetime import timedelta
 from celery.schedules import crontab
 
@@ -27,7 +28,7 @@ SECRET_KEY = '+0hqht43j7br=x$%cmfs+a$+&wfoks$#ix6_l3_j&k2=#uu$5f'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.5.54', 'geekover.xicp.net', '127.0.0.1']
+ALLOWED_HOSTS = ['192.168.5.54', 'geekover.xicp.net', '127.0.0.1', '123.206.58.108']
 
 
 # Application definition
@@ -137,7 +138,19 @@ CELERY_TIMEZONE = 'Asia/Harbin'
 CELERYBEAT_SCHEDULE = {
     'add-every-workday-afternoon': {
         'task': 'get_today_menu',
-        'schedule': crontab(hour=17, minute=30, day_of_week='mon,tue,wed,thu,fri'),
+        'schedule': crontab(hour=17, minute=20, day_of_week='mon,tue,wed,thu,fri'),
         'args': (2,)
     },
 }
+
+# soup, selenium
+CRAWL_DRIVER = 'soup'
+
+# chrome, phantomjs
+WEB_DRIVER_ENGINE = 'chrome'
+
+CHROME_PATH = 'D:\\UserApp\\chromedriver\\chromedriver.exe'
+PHANTOMJS_PATH = '/root/phantomjs/bin/phantomjs'
+
+
+from waimai.settings_local import *

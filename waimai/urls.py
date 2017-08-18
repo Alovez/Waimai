@@ -24,7 +24,7 @@ urlpatterns = [
     url(r'menu', view.hello),
     url(r'^admin', view.admin),
     url(r'^login/$', view.login),
-    url(r'^regist/$', view.regist),
+    # url(r'^regist/$', view.regist),
     url(r'^logout/$', view.logout),
     url(r'^cart/$', view.cart),
     url(r'^summary/$',view.summary),
@@ -32,6 +32,10 @@ urlpatterns = [
     url(r'^change/$', view.change),
     url(r'^shop_admin/$', view.shop_admin),
     url(r'^change_shop/$', view.change_shop),
+    url(r'^submit_order', view.submit_order),
+    url(r'^summary_custom', view.summary_custom),
+    url(r'^ajax_summary', view.ajax_summary,name='summary-ajax'),
+    url(r'^user_upload', view.user_upload)
 ]
 
 # TODO: 尝试自动下单

@@ -15,8 +15,8 @@
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="/statics/css/common.css" rel="stylesheet">
-
+      <link href="/statics/css/common.css" rel="stylesheet">
+      <link rel="stylesheet" type="text/css" media="all" href="/statics/css/daterangepicker.css" />
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -43,7 +43,6 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">欢迎您，{{ username }}<span class="caret"></span></a>
                 <ul class="dropdown-menu">
                   <li><a href="/shop_admin">饭店管理</a></li>
-                  <li><a href="/user_upload">导入用户</a></li>
                   <li><a href="/summary">点单统计</a></li>
                   <li><a href="/reset">重置密码</a></li>
                   <li><a href="/change">修改管理员密码</a></li>
@@ -58,39 +57,42 @@
 
     <div class="container">
         <div class="jumbotron">
-        <h1></h1>
-        <h1>{{ hello }}</h1>
+            <h3>{{ hello }}</h3>
+            <div class="row">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <div class="demo">
+                            <label for="range_picker">选择日期</label>
+                            <input class="form-control" type="text" id="range_picker">
+                            <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="query_name">用户名</label>
+                        <input type="text" class="form-control" id="query_name" placeholder="需要查询的用户名">
+                    </div>
+                    <div id="submit_post" class="btn btn-default">查询</div>
+                </form>
+            </div>
         <!--<p>This is a template showcasing the optional theme stylesheet included in Bootstrap. Use it as a starting point to create something more unique by building on or modifying it.</p>-->
       </div>
       <div class="row">
-        <div class="col-sm-4">
-          <h1>{{  shop1_name }}</h1>
-          <div class="list-group">
-            {% for item in shop1 %}
+        <div class="col-sm-6">
+          <div id="summary_list" class="list-group">
+            {% for item in summary_data %}
                 <a href="#" class="list-group-item">{{ item.0 }}<p>数量： {{ item.1 }}</p></a>
-            {% endfor %}
-          </div>
-        </div><!-- /.col-sm-4 -->
-        <div class="col-sm-4">
-          <h1>{{  shop2_name }}</h1>
-          <div class="list-group">
-            {% for item in shop2 %}
-               <a href="#" class="list-group-item">{{ item.0 }}<p>数量： {{ item.1 }}</p></a>
-            {% endfor %}
-          </div>
-        </div><!-- /.col-sm-4 -->
-        <div class="col-sm-4">
-          <h1>{{  shop3_name }}</h1>
-          <div class="list-group">
-            {% for item in shop3 %}
-              <a href="#" class="list-group-item">{{ item.0 }}<p>数量： {{ item.1 }}</p></a>
             {% endfor %}
           </div>
         </div><!-- /.col-sm-4 -->
       </div>
 
     </div><!-- /.container -->
-
+    <style type="text/css">
+      .demo { position: relative; }
+      .demo i {
+        position: absolute; bottom: 10px; right: 10px; top: auto; cursor: pointer;
+      }
+    </style>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -98,5 +100,41 @@
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--date picker js-->
+    <script type="text/javascript" src="/statics/js/moment.js"></script>
+    <script type="text/javascript" src="/statics/js/daterangepicker.js"></script>
+    <script>
+        $('#query_name').change(function(){
+            submit_data = $("#submit_post").data('submit_data')
+            if(submit_data){
+                submit_data.user = $('#query_name').val();
+            }else{
+                submit_data = {'user':$('#query_name').val()}
+            }
+            $("#submit_post").data('submit_data',submit_data);
+        });
+        $('#range_picker').daterangepicker({
+            "startDate": "07/28/2017",
+            "endDate": "08/03/2017"
+        }, function(start, end, label) {
+            console.log("New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')");
+            date_info = {'start':start.format('YYYY-MM-DD'), 'end':end.format('YYYY-MM-DD')};
+            $("#submit_post").data('submit_data',date_info);
+        });
+        $("#submit_post").click(function(){
+            submit_data = $("#submit_post").data('submit_data')
+            $.ajax({
+                type:"POST",
+                url:"/ajax_summary",
+                data:submit_data,
+                success: function(ret){
+                    $("#summary_list").empty()
+                 $.each(ret, function(i,item){
+                    $("#summary_list").append('<a href="#" class="list-group-item">' + item[0] + '<p>价格： ' + item[1] + '</p></a>')
+                 });
+                }
+            });
+        });
+    </script>
   </body>
 </html>

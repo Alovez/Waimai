@@ -35,7 +35,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/menu">点单</a>
+          <a class="navbar-brand" href="#menu_top">点单</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           {% if is_admin %}
@@ -44,7 +44,8 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">欢迎您，{{ username }}<span class="caret"></span></a>
                 <ul class="dropdown-menu">
                   <li><a href="/shop_admin">饭店管理</a></li>
-                  <li><a href="/summary">点单统计</a></li>
+                    <li><a href="/user_upload">导入用户</a></li>
+                      <li><a href="/summary">点单统计</a></li>
                     <li><a href="/reset">重置密码</a></li>
                     <li><a href="/change">修改管理员密码</a></li>
                   <li role="separator" class="divider"></li>
@@ -75,39 +76,111 @@
           {% endif %}
         <div class="jumbotron">
         <h1></h1>
-        <h1>{{ hello }}</h1>
+        <h1 id="menu_top">{{ hello }}</h1>
 
         <!--<p>This is a template showcasing the optional theme stylesheet included in Bootstrap. Use it as a starting point to create something more unique by building on or modifying it.</p>-->
       </div>
+        <div class="row">
+            <span class="col-sm-4">
+                <a href="#shop_1_list"><h1>{{  shop1_name }}</h1></a>
+            </span>
+            <span class="col-sm-4">
+                <a href="#shop_2_list"><h1>{{  shop2_name }}</h1></a>
+            </span>
+            <span class="col-sm-4">
+                <a href="#shop_3_list"><h1>{{  shop3_name }}</h1></a>
+            </span>
+        </div>
       <div class="row">
         <div class="col-sm-4">
-          <h1>{{  shop1_name }}</h1>
-          <div class="list-group">
+          <div id="shop_1_list" class="list-group">
             {% for item in shop1 %}
-                <a href="/menu?dish={{ item.1 }}&shop=1" class="list-group-item">{{ item.1 }}</a>
+              <div class="list-group-item row">
+                  <img src="{{ item.4 }}" alt="菜单图片" class="img-rounded col-xs-4 img-responsive">
+                  <div class="col-xs-8 container-fluid">
+                      <div class="row">
+                          <span>{{ item.1 }}</span>
+                      </div>
+                      <div class="row">
+                          <span>{{ item.3 }}</span>
+                      </div>
+                      <!--<a href="/menu?dish={{ item.1 }}&shop=1" class="row">{{ item.1 }}</a>-->
+                      <div class="row" style="vertical-align:bottom;">
+                          <button class="btn col-xs-2 col-xs-offset-6" id="{{ item.5 }}less">-</button>
+                          <input id="{{ item.5 }}text" class="btn col-xs-2" value="0">
+                          <button id="{{ item.5 }}add" class="btn col-xs-2">+</button>
+                      </div>
+                  </div>
+              </div>
             {% endfor %}
           </div>
-        </div><!-- /.col-sm-4 -->
+        </div>
         <div class="col-sm-4">
-          <h1>{{  shop2_name }}</h1>
-          <div class="list-group">
+          <div id="shop_2_list" class="list-group">
             {% for item in shop2 %}
-                <a href="/menu?dish={{ item.1 }}&shop=2" class="list-group-item">{{ item.1 }}</a>
+              <div class="list-group-item row">
+                  <img src="{{ item.4 }}" alt="菜单图片" class="img-rounded col-xs-4 img-responsive">
+                  <div class="col-xs-8 container-fluid">
+                      <div class="row">
+                          <span>{{ item.1 }}</span>
+                      </div>
+                      <div class="row">
+                          <span>{{ item.3 }}</span>
+                      </div>
+                      <!--<a href="/menu?dish={{ item.1 }}&shop=1" class="row">{{ item.1 }}</a>-->
+                      <div class="row" style="vertical-align:bottom;">
+                          <button class="btn col-xs-2 col-xs-offset-6" id="{{ item.5 }}less">-</button>
+                          <input id="{{ item.5 }}text" class="btn col-xs-2" value="0">
+                          <button id="{{ item.5 }}add" class="btn col-xs-2">+</button>
+                      </div>
+                  </div>
+              </div>
             {% endfor %}
           </div>
-        </div><!-- /.col-sm-4 -->
+        </div>
         <div class="col-sm-4">
-          <h1>{{  shop3_name }}</h1>
-          <div class="list-group">
+          <div id="shop_3_list" class="list-group">
             {% for item in shop3 %}
-                <a href="/menu?dish={{ item.1 }}&shop=3" class="list-group-item">{{ item.1 }}</a>
+              <div class="list-group-item row">
+                  <img src="{{ item.4 }}" alt="菜单图片" class="img-rounded col-xs-4 img-responsive">
+                  <div class="col-xs-8 container-fluid">
+                      <div class="row">
+                          <span>{{ item.1 }}</span>
+                      </div>
+                      <div class="row">
+                          <span>{{ item.3 }}</span>
+                      </div>
+                      <!--<a href="/menu?dish={{ item.1 }}&shop=1" class="row">{{ item.1 }}</a>-->
+                      <div class="row" style="vertical-align:bottom;">
+                          <button class="btn col-xs-2 col-xs-offset-6" id="{{ item.5 }}less">-</button>
+                          <input id="{{ item.5 }}text" class="btn col-xs-2" value="0">
+                          <button id="{{ item.5 }}add" class="btn col-xs-2">+</button>
+                      </div>
+                  </div>
+              </div>
             {% endfor %}
           </div>
-        </div><!-- /.col-sm-4 -->
+        </div>
       </div>
-
+    <a class="btn btn-primary btn-lg navbar-fixed-bottom" data-toggle="modal" data-target="#myModal" id="submit_order">提交订单</a>
     </div><!-- /.container -->
-
+    <!-- 模态框（Modal） -->
+  <div class="modal fade" data-show="false" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h4 class="modal-title" id="myModalLabel">
+                      请稍候
+                  </h4>
+              </div>
+              <div class="modal-body">
+                  正在提交，请稍候。。。
+              </div>
+              <div class="modal-footer">
+              </div>
+          </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+  </div>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -115,5 +188,49 @@
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#myModal').modal({backdrop: 'static', keyboard: false});
+        {% for shop in shop_list %}
+            {% for item in shop %}
+                $("#{{ item.5 }}less").click(function(){
+                    dish_num=$("#{{ item.5 }}text").val();
+                    if(dish_num > 0){
+                        dish_num--;
+                    }
+                    $("#{{ item.5 }}text").val(dish_num);
+                    dish=$("#submit_order").data("dish_info");
+                    if(dish){
+                        dish.n{{ item.5 }} = dish_num;
+                    }else{
+                        dish = {"n{{ item.5 }}":dish_num }
+                    }
+                    $("#submit_order").data("dish_info", dish);
+                });
+                $("#{{ item.5 }}add").click(function(){
+                    dish_num=$("#{{ item.5 }}text").val()
+                    dish_num++;
+                    $("#{{ item.5 }}text").val(dish_num);
+                    dish=$("#submit_order").data("dish_info");
+                    if(dish){
+                        dish.n{{ item.5 }} = dish_num;
+                    }else{
+                        dish = {"n{{ item.5 }}":dish_num }
+                    }
+                    $("#submit_order").data("dish_info", dish);
+                });
+            {% endfor %}
+        {% endfor %}
+            $("#submit_order").click(function(){
+                dish_info = $("#submit_order").data("dish_info");
+                $("#submit_order").hide();
+                $.post("/submit_order", dish_info, function(){
+                    alert("已提交");
+                    $("#submit_order").show()
+                    $('#myModal').modal('hide');
+                });
+            });
+        });
+    </script>
   </body>
 </html>

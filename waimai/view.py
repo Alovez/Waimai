@@ -6,19 +6,24 @@ from django.http import HttpResponse,HttpResponseRedirect
 import time
 from django.contrib import auth
 from waimai.utils.get_menu import get_menu_by_id, get_menu_from_db, get_shop, get_shop_table,change_shop_table
-from waimai.utils.get_order import add_cart, get_cart, get_order, remove_order
+from waimai.utils.get_order import add_cart, get_cart, get_order, remove_order, get_order_by_name_date
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from waimai.constants import WeekDay
+from django.conf import settings
+from django.http import JsonResponse
+import json
+import os
+import csv
+from django.views.decorators.csrf import csrf_exempt
 
 @login_required()
 def hello(request):
     context = {}
     if 'dish' in request.GET and request.user.username != 'admin':
         dish = request.GET['dish']
-        shop_id = request.GET['shop']
-        add_cart(request.user.username, dish, shop_id)
+        add_cart(request.user.username, dish)
         context['dish'] = dish
     context['hello'] = WeekDay[datetime.today().weekday()]
     context['username'] = request.user.username
@@ -32,7 +37,18 @@ def hello(request):
     context['shop1_name'] = shop1[0][2]
     context['shop2_name'] = shop2[0][2]
     context['shop3_name'] = shop3[0][2]
+    context['shop_list'] = [shop1, shop2, shop3]
+    print(settings.BASE_DIR)
     return render(request, 'menu.html', context)
+
+@csrf_exempt
+def submit_order(request):
+    if request.method == 'POST':
+        for item in request.POST:
+            for i in range(int(request.POST[item])):
+                add_cart(request.user.username, item[1:])
+    return HttpResponseRedirect('/menu')
+
 
 # bH1&5C
 @login_required()
@@ -123,8 +139,8 @@ def logout(req):
 
 @login_required()
 def cart(req):
-    if 'dish' in req.GET:
-        remove_order(req.user.username, req.GET['dish'], req.GET['shop'])
+    if 'dish_id' in req.GET:
+        remove_order(req.user.username, req.GET['dish_id'], req.GET['shop'])
     dishes = get_cart(req.user.username)
     context = {}
     context['dishes'] = dishes
@@ -140,7 +156,6 @@ def summary(request):
     context['hello'] = '今天的点单如下'
     shop1 = get_order(1)
     context['shop1'] = shop1
-    print(shop1)
     context['shop1_name'] = get_shop(1)
     context['shop2_name'] = get_shop(2)
     context['shop3_name'] = get_shop(3)
@@ -173,8 +188,6 @@ def shop_admin(request):
         shop_list = get_shop_table()
         context = {}
         context['shop_list'] = shop_list
-        print('*' * 10)
-        print(shop_list)
         context['username'] = request.user.username
         return render(request, 'shop_admin.html', context)
     else:
@@ -198,5 +211,73 @@ def change_shop(request):
             return  render(request, 'change_shop.html', context)
         else:
             return HttpResponseRedirect('/menu')
+    else:
+        return HttpResponseRedirect('/menu')
+
+@login_required()
+def summary_custom(request):
+    context = {}
+    context['hello'] = '按日期查询点餐记录'
+    return render(request, 'summary_month.html', context)
+
+@csrf_exempt
+def ajax_summary(request):
+    print('get ajax call')
+    if request.method == 'POST':
+        start_date = request.POST['start']
+        end_date = request.POST['end']
+        if 'user' in request.POST:
+            user = request.POST['user']
+        else:
+            user = 'all'
+        summary_data = get_order_by_name_date(user,start_date, end_date)
+        result = summary_data
+    else:
+        result = [['无点餐记录','或无此用户']]
+    if not len(result):
+        result = [['无点餐记录或无此用户', 'N/A']]
+    json_result = json.dumps(result)
+    return  HttpResponse(json_result, content_type='application/json')
+
+@login_required()
+def user_upload(request):
+    if request.user.username == 'admin':
+        context = {}
+        context['username'] = request.user.username
+        if request.method == "POST":  # 请求方法为POST时，进行处理
+            user_csv = request.FILES.get("user_cvs", None)  # 获取上传的文件，如果没有文件，则默认为None
+            if not user_csv:
+                context['result'] = '没有选取需要上传的文件'
+            else:
+                destination = open(os.path.join("./", user_csv.name), 'wb+')  # 打开特定的文件进行二进制的写操作
+                for chunk in user_csv.chunks():  # 分块写入文件
+                    destination.write(chunk)
+                destination.close()
+                error_list = []
+                with open(os.path.join("./", user_csv.name), 'r', encoding='UTF-8') as f:
+                    reader = csv.reader(f)
+                    try:
+                        for row in reader:
+                            username = row[0].encode('utf-8').decode('utf-8-sig')
+                            email = row[1]
+                            filterResult = User.objects.filter(username=username)
+                            if len(filterResult) > 0:
+                                error_list.append([username, '用户名已存在'])
+                                continue
+                            filterResult = User.objects.filter(email=email)
+                            if len(filterResult) > 0:
+                                error_list.append([username, '邮箱已存在'])
+                                continue
+                            user = User()
+                            user.username = username
+                            user.set_password('Digibird2009')
+                            user.email = email
+                            user.save()
+                        print(error_list)
+                        context['result'] = '上传成功'
+                        context['error_list'] = error_list
+                    except csv.Error as e:
+                        context['result'] = '文件错误： %s' % e
+        return render(request, 'upload_user.html', context)
     else:
         return HttpResponseRedirect('/menu')
