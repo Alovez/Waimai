@@ -218,10 +218,12 @@ def change_shop_table(weekday, shop_num, shop_id, is_mobile):
     if is_shop_exist:
         conn.execute("update weekday_shop set SHOP_ID='%s' "
                      "where WEEKDAY='%s' and SHOP_NUM='%s'" % (shop_id, weekday, shop_num))
+        conn.execute("update weekday_shop set IS_MOBILE='%s' "
+                     "where WEEKDAY='%s' and SHOP_NUM='%s'" % (is_mobile, weekday, shop_num))
     else:
         conn.execute("insert into weekday_shop (ID,WEEKDAY,SHOP_NUM,SHOP_ID,IS_MOBILE) "
                      "values ('%s','%s','%s','%s','%s')" % (
-                     weekday * 10 + shop_num, weekday, shop_num, shop_id, is_mobile))
+                     weekday + shop_num, weekday, shop_num, shop_id, is_mobile))
     conn.commit()
     conn.close()
 
