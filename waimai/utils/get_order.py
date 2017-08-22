@@ -82,4 +82,3 @@ def remove_order(username, dish_id, shop):
         conn.execute('delete from order_list where ID=%s' % item[0])
         conn.commit()
     conn.close()
-    print('remove success')
