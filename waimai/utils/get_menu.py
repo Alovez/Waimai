@@ -97,6 +97,8 @@ def get_menu_by_id(shop_num, id, is_mobile=False):
                 except:
                     img_src = '暂无图片'
                 dish_price = li.select('p.price')[0].string
+                if len(li.select('.item-empty')) != 0:
+                    continue
                 if [dish_id, dish_name, img_src, dish_price] not in menu_list:
                     menu_list.append([dish_id, dish_name, img_src, dish_price])
         else:
@@ -116,6 +118,8 @@ def get_menu_by_id(shop_num, id, is_mobile=False):
                 except:
                     img_src = '暂无图片'
                 dish_price = li.select('div.info strong')[0].string
+                if len(li.select('div.info .m-break')) != 0:
+                    continue
                 if [dish_id, dish_name, img_src, dish_price] not in menu_list:
                     menu_list.append([dish_id, dish_name, img_src, dish_price])
             shop_name = soup.select('section.breadcrumb span')[0].string
