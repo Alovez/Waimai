@@ -12,6 +12,7 @@ from waimai.constants import WeekDay
 from datetime import datetime
 import re
 import json
+import random
 from waimai.settings import WEB_DRIVER_ENGINE, CHROME_PATH, PHANTOMJS_PATH, CRAWL_DRIVER
 
 
@@ -29,6 +30,15 @@ def get_today_menu(weekday):
             is_mobile = (item[1] == '手机抓取')
         if shop_id != '':
             get_menu_by_id.delay(shop_num, shop_id, is_mobile)
+
+@celery_app.task(name='menu_check')
+def check_menu(shop_num):
+    if len(get_menu_from_db(shop_num)) == 0:
+        shop_list = get_all_shop(shop_num)
+        r = random.randint(0, len(shop_list) - 1)
+        get_menu_by_id.delay(shop_num, shop_list[r][0], shop_list[r][1])
+        print(shop_list[r][0])
+
 
 
 @celery_app.task(name='get_menu_by_id')
@@ -147,6 +157,7 @@ def get_menu_by_id(shop_num, id, is_mobile=False):
         item_id += 1
     conn.commit()
     conn.close()
+    check_menu.delay(shop_num)
 
     # for item in menu_list:
 
@@ -261,6 +272,14 @@ def get_shop_table():
             result.append([WeekDay[weekday], weekday_list])
         return result
 
+def get_all_shop(shop_num):
+    conn = sqlite3.connect('menu_list.db')
+    cursor = conn.execute("select SHOP_ID,IS_MOBILE from weekday_shop where SHOP_NUM='%s'" % shop_num)
+    shop_list = []
+    for item in cursor:
+        shop_list.append(item)
+    conn.close()
+    return shop_list
 
 def is_table_exist(conn, table):
     cursor = conn.execute("select name from sqlite_master where type='table' order by name;")
