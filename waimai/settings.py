@@ -153,4 +153,7 @@ CHROME_PATH = 'D:\\UserApp\\chromedriver\\chromedriver.exe'
 PHANTOMJS_PATH = '/root/phantomjs/bin/phantomjs'
 
 
+OPEN_HOUR = 17
+OPEN_MIN = 30
+
 from waimai.settings_local import *

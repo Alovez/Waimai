@@ -16,15 +16,16 @@ from django.http import JsonResponse
 import json
 import os
 import csv
+from waimai.settings import OPEN_HOUR, OPEN_MIN
 from django.views.decorators.csrf import csrf_exempt
 
 @login_required()
 def hello(request):
     context = {}
-    if 'dish' in request.GET and request.user.username != 'admin':
-        dish = request.GET['dish']
-        add_cart(request.user.username, dish)
-        context['dish'] = dish
+    # if 'dish' in request.GET and request.user.username != 'admin':
+    #     dish = request.GET['dish']
+    #     add_cart(request.user.username, dish)
+    #     context['dish'] = dish
     context['hello'] = WeekDay[datetime.today().weekday()]
     context['username'] = request.user.username
     context['is_admin'] = (request.user.username == 'admin')
@@ -38,12 +39,14 @@ def hello(request):
     context['shop2_name'] = shop2[0][2]
     context['shop3_name'] = shop3[0][2]
     context['shop_list'] = [shop1, shop2, shop3]
-    print(settings.BASE_DIR)
+    if request.user.username != 'admin':
+        if OPEN_HOUR > int(time.strftime("%H",time.localtime(time.time()))) or OPEN_MIN > int(time.strftime("%M",time.localtime(time.time()))):
+            return render(request, 'Wait.html')
     return render(request, 'menu.html', context)
 
 @csrf_exempt
 def submit_order(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and request.user.username != 'admin':
         for item in request.POST:
             for i in range(int(request.POST[item])):
                 add_cart(request.user.username, item[1:])
