@@ -6,7 +6,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 import time
 from django.contrib import auth
 from waimai.utils.get_menu import get_menu_by_id, get_menu_from_db, get_shop, get_shop_table,change_shop_table
-from waimai.utils.get_order import add_cart, get_cart, get_order, remove_order, get_order_by_name_date
+from waimai.utils.get_order import add_cart, get_cart, get_order, remove_order, get_order_by_name_date, add_comment
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
@@ -142,8 +142,13 @@ def logout(req):
 
 @login_required()
 def cart(req):
-    if 'dish_id' in req.GET:
+    comment_flag = 'comment' in req.GET and req.GET.get('comment') != ''
+    dish_id_flag = 'dish_id' in req.GET and 'shop' in req.GET
+    if dish_id_flag and not comment_flag:
         remove_order(req.user.username, req.GET['dish_id'], req.GET['shop'])
+    elif comment_flag:
+        add_comment(req.user.username, req.GET.get('dish_id'), req.GET.get('comment'))
+        print(req.GET.get('comment'))
     dishes = get_cart(req.user.username)
     context = {}
     context['dishes'] = dishes

@@ -4,12 +4,60 @@ from waimai.utils.get_menu import get_dish_info_by_id, get_shop_id_by_id
 
 def get_cart(username):
     conn = sqlite3.connect('order_info')
-    cursor = conn.execute("select DISH,SHOP,DISH_ID from order_list"
+    cursor = conn.execute("select DISH,SHOP,DISH_ID, ID from order_list"
                           " where NAME='%s' and TIME='%s'" % (username, get_today_date()))
     dishes = []
     for row in cursor:
-        dishes.append([row[0],row[1], row[2]])
+        dish_comment = get_comment(row[3], username)
+        if len(dish_comment) != 0:
+            dishes.append([row[0],row[1], row[2], row[3], dish_comment[0][0]])
+        else:
+            dishes.append([row[0], row[1], row[2], row[3]])
     return dishes
+
+def get_comment(dish_id, username=None):
+    conn = sqlite3.connect('order_info')
+    if username is None:
+        #TODO:  增加返回菜名
+        cursor = conn.execute("select COMMENT, USER_NAME from comment_list where DISH_ID='%s' and TIME='%s'" % (dish_id, get_today_date()))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+    else:
+        cursor = conn.execute("select COMMENT from comment_list where DISH_ID='%s' and USER_NAME='%s' and TIME='%s'" % (dish_id, username, get_today_date()))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+def add_comment(username, dish_id, comment):
+    conn = sqlite3.connect('order_info')
+    cursor = conn.execute("select name from sqlite_master where type='table' order by name;")
+    is_table = False
+    for row in cursor:
+        if row[0] == "comment_list":
+            is_table = True
+    if not is_table:
+        conn.execute('''CREATE TABLE comment_list
+           (ID INT PRIMARY KEY     NOT NULL,
+           USER_NAME           TEXT     NOT NULL,
+           DISH_ID        TEXT     NOT NULL,
+           COMMENT        TEXT     NOT NULL,
+           TIME           TEXT     NOT NULL);''')
+        conn.commit()
+    if len(get_comment(dish_id, username)) == 0:
+        id_cursor = conn.execute('select id from comment_list order by ID desc limit 0,1')
+        last_id = 0
+        for row in id_cursor:
+            last_id = row[0]
+        conn.execute("insert into comment_list (ID, USER_NAME, DISH_ID, COMMENT, TIME) "
+                     "values ('%s', '%s', '%s', '%s', '%s')" % (last_id + 1, username, dish_id, comment, get_today_date()))
+        conn.commit()
+    else:
+        conn.execute("update comment_list set COMMENT='%s' where DISH_ID='%s' and USER_NAME='%s'" % (comment, dish_id, username))
+        conn.commit()
+    conn.close()
 
 def add_cart(username, dish_id):
     conn = sqlite3.connect('order_info')
@@ -74,11 +122,14 @@ def get_order_by_name_date(username, start_date, end_date):
     conn.close()
     return dishes
 
-def remove_order(username, dish_id, shop):
+def remove_order(username, dish_p_id, shop):
     conn = sqlite3.connect('order_info')
-    cursor = conn.execute("select ID from order_list "
-                          "where NAME='%s' and DISH_ID='%s' and SHOP='%s' and TIME='%s' limit 1" % (username, dish_id, shop, get_today_date()))
-    for item in cursor:
-        conn.execute('delete from order_list where ID=%s' % item[0])
-        conn.commit()
+    # cursor = conn.execute("select ID from order_list "
+    #                       "where NAME='%s' and DISH_ID='%s' and SHOP='%s' and TIME='%s' limit 1" % (username, dish_p_id, shop, get_today_date()))
+    # for item in cursor:
+    #     conn.execute('delete from order_list where ID=%s' % item[0])
+    #     conn.commit()
+    conn.execute('delete from order_list where ID=%s' % dish_p_id)
+    conn.execute("delete from comment_list where DISH_ID='%s'" % dish_p_id)
+    conn.commit()
     conn.close()

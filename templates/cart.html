@@ -72,7 +72,14 @@
           {% for dish in dishes %}
             <tr>
               <td>{{ dish.0 }}</td>
-              <td><a class="btn btn-primary" href="/cart?dish_id={{ dish.2 }}&shop={{ dish.1 }}">删除</a></td>
+              <td><a class="btn btn-primary" href="/cart?dish_id={{ dish.3 }}&shop={{ dish.1 }}">删除</a></td>
+              <td>
+                <form class="form-inline">
+                  <input type="text" style="display:none" name="dish_id" value="{{ dish.3 }}">
+                  <input type="text" name="comment" class="form-control" placeholder="{% if dish.4 %}{{ dish.4 }}{% else %}添加备注...{% endif %}">
+                  <button type="submit" class="btn btn-primary">提交备注</button>
+                </form>
+              </td>
             </tr>
           {% endfor %}
           </tbody>
