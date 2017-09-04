@@ -15,14 +15,22 @@ def get_cart(username):
             dishes.append([row[0], row[1], row[2], row[3]])
     return dishes
 
-def get_comment(dish_id, username=None):
+def get_order_name_by_id(id):
+    conn = sqlite3.connect('order_info')
+    cursor = conn.execute("select DISH from order_list where ID='%s'" % id)
+    for row in cursor:
+        return row[0]
+
+def get_comment(dish_id=None, username=None):
     conn = sqlite3.connect('order_info')
     if username is None:
         #TODO:  增加返回菜名
-        cursor = conn.execute("select COMMENT, USER_NAME from comment_list where DISH_ID='%s' and TIME='%s'" % (dish_id, get_today_date()))
+        cursor = conn.execute("select COMMENT, USER_NAME, DISH_ID from comment_list where TIME='%s'" % (get_today_date()))
         result = []
         for row in cursor:
-            result.append(row)
+            trow = list(row)
+            trow[2] = get_order_name_by_id(trow[2])
+            result.append(trow)
         return result
     else:
         cursor = conn.execute("select COMMENT from comment_list where DISH_ID='%s' and USER_NAME='%s' and TIME='%s'" % (dish_id, username, get_today_date()))

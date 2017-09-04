@@ -2,11 +2,12 @@
 
 # from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
-from django.http import HttpResponse,HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 import time
 from django.contrib import auth
-from waimai.utils.get_menu import get_menu_by_id, get_menu_from_db, get_shop, get_shop_table,change_shop_table
-from waimai.utils.get_order import add_cart, get_cart, get_order, remove_order, get_order_by_name_date, add_comment
+from waimai.utils.get_menu import get_menu_by_id, get_menu_from_db, get_shop, get_shop_table, change_shop_table
+from waimai.utils.get_order import add_cart, get_cart, get_order, remove_order, get_order_by_name_date, add_comment, \
+    get_comment
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
@@ -18,6 +19,7 @@ import os
 import csv
 from waimai.settings import OPEN_TIME
 from django.views.decorators.csrf import csrf_exempt
+
 
 @login_required()
 def hello(request):
@@ -40,9 +42,10 @@ def hello(request):
     context['shop3_name'] = shop3[0][2]
     context['shop_list'] = [shop1, shop2, shop3]
     if request.user.username != 'admin':
-        if time.strftime("%H-%M",time.localtime(time.time())) < OPEN_TIME:
+        if time.strftime("%H-%M", time.localtime(time.time())) < OPEN_TIME:
             return render(request, 'Wait.html')
     return render(request, 'menu.html', context)
+
 
 @csrf_exempt
 def submit_order(request):
@@ -74,7 +77,8 @@ def admin(request):
         context['username'] = request.user.username
         return render(request, 'admin.html', context)
 
-#注册
+
+# 注册
 def regist(req):
     if req.user.is_authenticated():
         return HttpResponseRedirect('/menu')
@@ -83,7 +87,7 @@ def regist(req):
         password = req.POST['password']
         password_re = req.POST['password_re']
         email = req.POST['email']
-        #添加到数据库
+        # 添加到数据库
         filterResult = User.objects.filter(username=username)
         if len(filterResult) > 0:
             result = {}
@@ -100,7 +104,8 @@ def regist(req):
         return render(req, 'login.html')
     return render(req, 'regist.html')
 
-#登陆
+
+# 登陆
 def login(req):
     if req.user.is_authenticated():
         return HttpResponseRedirect('/menu')
@@ -120,6 +125,7 @@ def login(req):
     else:
         return render(req, 'login.html')
 
+
 @login_required()
 def change(req):
     context = {}
@@ -127,7 +133,7 @@ def change(req):
         password = req.POST['password']
         password_re = req.POST['password_re']
         if password == password_re:
-            c_user =  req.user
+            c_user = req.user
             c_user.set_password(password)
             c_user.save()
             return HttpResponseRedirect('/menu')
@@ -136,9 +142,11 @@ def change(req):
             return render(req, 'change.html', context)
     return render(req, 'change.html')
 
+
 def logout(req):
     auth.logout(req)
     return HttpResponseRedirect("/menu")
+
 
 @login_required()
 def cart(req):
@@ -153,6 +161,7 @@ def cart(req):
     context = {}
     context['dishes'] = dishes
     return render(req, 'cart.html', context)
+
 
 @login_required()
 def summary(request):
@@ -171,7 +180,9 @@ def summary(request):
     context['shop2'] = shop2
     shop3 = get_order(3)
     context['shop3'] = shop3
+    context['comments'] = get_comment()
     return render(request, 'summary.html', context)
+
 
 @login_required()
 def reset(request):
@@ -190,6 +201,7 @@ def reset(request):
     else:
         return HttpResponseRedirect('/menu')
 
+
 @login_required()
 def shop_admin(request):
     if request.user.username == 'admin':
@@ -200,6 +212,7 @@ def shop_admin(request):
         return render(request, 'shop_admin.html', context)
     else:
         return HttpResponseRedirect('/menu')
+
 
 @login_required()
 def change_shop(request):
@@ -216,17 +229,19 @@ def change_shop(request):
             context['weekday'] = WeekDay.index(request.GET['weekday'])
             context['shop_num'] = request.GET['shop_num']
             context['username'] = request.user.username
-            return  render(request, 'change_shop.html', context)
+            return render(request, 'change_shop.html', context)
         else:
             return HttpResponseRedirect('/menu')
     else:
         return HttpResponseRedirect('/menu')
+
 
 @login_required()
 def summary_custom(request):
     context = {}
     context['hello'] = '按日期查询点餐记录'
     return render(request, 'summary_month.html', context)
+
 
 @csrf_exempt
 def ajax_summary(request):
@@ -238,14 +253,15 @@ def ajax_summary(request):
             user = request.POST['user']
         else:
             user = 'all'
-        summary_data = get_order_by_name_date(user,start_date, end_date)
+        summary_data = get_order_by_name_date(user, start_date, end_date)
         result = summary_data
     else:
-        result = [['无点餐记录','或无此用户']]
+        result = [['无点餐记录', '或无此用户']]
     if not len(result):
         result = [['无点餐记录或无此用户', 'N/A']]
     json_result = json.dumps(result)
-    return  HttpResponse(json_result, content_type='application/json')
+    return HttpResponse(json_result, content_type='application/json')
+
 
 @login_required()
 def user_upload(request):
