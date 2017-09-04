@@ -131,10 +131,10 @@ def get_order_by_name_date(username, start_date, end_date):
     conn = sqlite3.connect('order_info')
     if username == 'all':
         sql = "select DISH, PRICE from order_list " \
-              "where datetime(TIME) > '%s' and datetime(TIME) <= datetime('%s','+1 day')"  % (start_date, end_date)
+              "where datetime(TIME) >= '%s' and datetime(TIME) <= datetime('%s')"  % (start_date, end_date)
     else:
         sql = "select DISH, PRICE from order_list " \
-              "where datetime(TIME) > '%s' and datetime(TIME) <= datetime('%s','+1 day')" \
+              "where datetime(TIME) >= '%s' and datetime(TIME) <= datetime('%s')" \
               " and NAME='%s'" % (start_date, end_date, username)
     cursor = conn.execute(sql)
     dishes = []
