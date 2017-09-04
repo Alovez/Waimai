@@ -1,0 +1,14 @@
+amqp==1.4.9
+anyjson==0.3.3
+beautifulsoup4==4.6.0
+billiard==3.3.0.23
+celery==3.1.18
+Django==1.11.4
+html5lib==0.999999999
+kombu==3.0.37
+pytz==2017.2
+redis==2.10.5
+selenium==3.4.3
+six==1.10.0
+uWSGI==2.0.15
+webencodings==0.5.1
