@@ -23,6 +23,19 @@ def get_order_name_by_id(id):
 
 def get_comment(dish_id=None, username=None):
     conn = sqlite3.connect('order_info')
+    cursor = conn.execute("select name from sqlite_master where type='table' order by name;")
+    is_table = False
+    for row in cursor:
+        if row[0] == "comment_list":
+            is_table = True
+    if not is_table:
+        conn.execute('''CREATE TABLE comment_list
+               (ID INT PRIMARY KEY     NOT NULL,
+               USER_NAME           TEXT     NOT NULL,
+               DISH_ID        TEXT     NOT NULL,
+               COMMENT        TEXT     NOT NULL,
+               TIME           TEXT     NOT NULL);''')
+        conn.commit()
     if username is None:
         #TODO:  增加返回菜名
         cursor = conn.execute("select COMMENT, USER_NAME, DISH_ID from comment_list where TIME='%s'" % (get_today_date()))
