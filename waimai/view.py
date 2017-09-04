@@ -249,10 +249,11 @@ def ajax_summary(request):
     if request.method == 'POST':
         start_date = request.POST['start']
         end_date = request.POST['end']
-        if 'user' in request.POST:
+        if 'user' in request.POST and request.POST.get('user') != '':
             user = request.POST['user']
         else:
             user = 'all'
+        print(request.POST)
         summary_data = get_order_by_name_date(user, start_date, end_date)
         result = summary_data
     else:

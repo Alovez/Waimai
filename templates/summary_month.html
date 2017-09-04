@@ -113,13 +113,11 @@
             }
             $("#submit_post").data('submit_data',submit_data);
         });
-        $('#range_picker').daterangepicker({
-            "startDate": "07/28/2017",
-            "endDate": "08/03/2017"
-        }, function(start, end, label) {
-            console.log("New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')");
+        $('#range_picker').daterangepicker({}, function(start, end, label) {
             date_info = {'start':start.format('YYYY-MM-DD'), 'end':end.format('YYYY-MM-DD')};
             $("#submit_post").data('submit_data',date_info);
+            submit_data = $("#submit_post").data('submit_data')
+            submit_data.user = $('#query_name').val();
         });
         $("#submit_post").click(function(){
             submit_data = $("#submit_post").data('submit_data')
