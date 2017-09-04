@@ -63,6 +63,7 @@
             date_info = {'start':start.format('YYYY-MM-DD'), 'end':end.format('YYYY-MM-DD')};
             $("#submit_post").data('submit_data',date_info);
             submit_data = $("#submit_post").data('submit_data')
+            submit_data.user = $('#query_name').val();
         });
         $("#submit_post").click(function(){
             submit_data = $("#submit_post").data('submit_data')
