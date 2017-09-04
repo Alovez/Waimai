@@ -150,16 +150,18 @@ def logout(req):
 
 @login_required()
 def cart(req):
+    user_name = req.user.username
     comment_flag = 'comment' in req.GET and req.GET.get('comment') != ''
     dish_id_flag = 'dish_id' in req.GET and 'shop' in req.GET
     if dish_id_flag and not comment_flag:
-        remove_order(req.user.username, req.GET['dish_id'], req.GET['shop'])
+        remove_order(user_name, req.GET['dish_id'], req.GET['shop'])
     elif comment_flag:
-        add_comment(req.user.username, req.GET.get('dish_id'), req.GET.get('comment'))
+        add_comment(user_name, req.GET.get('dish_id'), req.GET.get('comment'))
         print(req.GET.get('comment'))
-    dishes = get_cart(req.user.username)
+    dishes = get_cart(user_name)
     context = {}
     context['dishes'] = dishes
+    context['username'] = user_name
     return render(req, 'cart.html', context)
 
 
@@ -239,6 +241,7 @@ def change_shop(request):
 @login_required()
 def summary_custom(request):
     context = {}
+    context['username'] = request.user.username
     context['hello'] = '按日期查询点餐记录'
     return render(request, 'summary_month.html', context)
 
